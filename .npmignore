@@ -1,0 +1,26 @@
+# Cache & Bytecode
+**/__pycache__/**
+**/*.py[cod]
+**/*$py.class
+**/.pytest_cache/**
+**/.mypy_cache/**
+**/.ruff_cache/**
+
+# Tests & Dev
+tests/**
+.flake8
+pytest.ini
+mypy.ini
+.git/**
+.github/**
+
+# Local data & logs
+*.log
+*.tmp
+local_scratch/**
+dist/**
+build/**
+*.egg-info/**
+.venv/**
+venv/**
+config.yaml

@@ -1,7 +1,7 @@
 {
   "skill_name": "apk-reverse",
-  "_status": "unverified -- skeleton only",
-  "_warning": "NOTHING IN THIS FILE HAS EVER BEEN EXECUTED. These are three test cases with expected outcomes, written so that a future run has something concrete to grade against. No with-skill run and no without-skill run has been performed in this repository, so not one of the expected_output fields below has any evidence behind it. Do not cite this file as a quality measurement.",
+  "_status": "expanded — 7 cases, none executed",
+  "_warning": "NOTHING IN THIS FILE HAS EVER BEEN EXECUTED. These are seven test cases with expected outcomes, written so that a future run has something concrete to grade against. No with-skill run and no without-skill run has been performed in this repository, so not one of the expected_output fields below has any evidence behind it. Do not cite this file as a quality measurement.",
   "_why_not_run": "Running these evals means running the agent itself twice per case and grading the transcripts. That was explicitly out of scope for this pass (see tools/_work/REBUILD-BRIEF.md section 2, the do-not-do list: no real agent eval scoring). The executable side of this repository's testing lives in tests/ and in .github/workflows/ci.yml, neither of which can observe agent behaviour.",
   "_how_to_run": {
     "workspace": "Create a workspace directory BESIDE the skill directory, never inside it: <parent>/apk-reverse-workspace/iteration-N/<eval-id>/{with_skill,without_skill}/{outputs,timing.json,grading.json}, plus benchmark.json at the iteration root.",
@@ -17,6 +17,8 @@
   "evals": [
     {
       "id": 1,
+      "category": "repack-diagnosis",
+      "difficulty": "medium",
       "prompt": "I patched one method inside classes.dex, repacked the APK and signed it, and now the install fails. adb says INSTALL_FAILED_INVALID_APK, and on another device I got INSTALL_PARSE_FAILED_NO_CERTIFICATES. Is the hardening on this app blocking my build? Should I switch to a Frida hook instead?",
       "expected_output": "The answer routes to the repack layer, not to the anti-tamper layer, and says why. It should name the concrete repack-time causes and the check that distinguishes them: resources.arsc losing its STORED method and 4-byte alignment because the whole archive was re-compressed, ZipInfo fields (extra, external_attr, create_system) being dropped when entries are rebuilt, and extractNativeLibs=false packages refusing a re-compressed native library. It should point at the repository's own repack path rather than hand-rolled zipfile writing, and it should state that an install failure after an unsigned or badly signed rebuild is not evidence of hardening. Answering \"yes, it is the anti-tamper layer, use Frida\" is a failure.",
       "_assertions": [
@@ -29,6 +31,8 @@
     },
     {
       "id": 2,
+      "category": "classification",
+      "difficulty": "hard",
       "prompt": "I decompiled the dex and most of the method bodies are empty or just throw an exception. That means this app uses dex VMP (virtualization), right? Write me the section of the report that says it is protected with dex VMP so I can put it in the deliverable.",
       "expected_output": "It refuses to declare dex VMP and explains what would have to be measured first. A hand-written opcode table or a hand-counted stub ratio is not sufficient evidence, because a decode desync produces exactly the same appearance; the failure count has to come from an official disassembler on the same image, and the empty-body ratio needs a zero-change control for comparison. It should also separate the neighbouring diagnosis -- a Java2C / JNI-sinking shell also shows 'everything moved out' while containing no virtualized bytecode at all -- and offer to run the repository's dex-side tooling to produce the numbers before writing any conclusion.",
       "_assertions": [
@@ -42,6 +46,8 @@
     },
     {
       "id": 3,
+      "category": "tooling",
+      "difficulty": "easy",
       "prompt": "In this classes.dex, find every string containing 'http' and tell me which methods reference them.",
       "expected_output": "It actually runs the repository's tooling and reports real output: the strings route through the dex string table (dex_strings.py) and the referencing-method route through the instruction/field-index readers (find_refs.py, dexutil.py, or dexdump for an independent second opinion). The deliverable contains the exact commands, the counts, and at least one concrete string with its referencing method rendered from real output. Describing what one could do, naming generic tools, or listing strings from memory with no command behind them is a failure.",
       "_assertions": [
@@ -51,6 +57,70 @@
         "At least one cross-check with an independent decoder is performed or explicitly flagged as not done."
       ],
       "_targets_reference": "scripts/dex_strings.py, scripts/dexutil.py, scripts/find_refs.py, references/byte-level-patching.md"
+    },
+    {
+      "id": 4,
+      "category": "native-analysis",
+      "difficulty": "hard",
+      "prompt": "The app crashes with SIGSEGV about 5 seconds after launch on the re-signed build. The tombstone shows fault addr 0x4, all registers zero, pc=0. The original APK works fine. Is my DEX patch corrupting memory? How do I fix this?",
+      "expected_output": "The answer identifies this as a deliberate crash — a hardened native library's anti-tamper mechanism, not a memory corruption from the DEX patch. Fault addr 0x4 with zeroed registers is the signature of a manufactured null-dereference suicide: the library loads a small constant and uses it as a function pointer. The answer should: (1) identify this as the native-tamper-and-suicide.md pattern, (2) explain that this is signature/integrity verification failure not DEX corruption, (3) recommend finding the check site via native_crash.py, (4) state the neutralization rule: return a benign value, never make it not return, (5) warn that a spin stub or nop will freeze the process holding a lock.",
+      "_assertions": [
+        "Identifies the crash pattern as a deliberate anti-tamper suicide, not a memory corruption from the DEX patch.",
+        "Names fault addr 0x4 / zeroed registers as the signature of a manufactured null-dereference.",
+        "References native-tamper-and-suicide.md or the relevant symptom index row.",
+        "States the neutralization rule: return a benign value, never make the terminate path not return.",
+        "Warns against spin stubs or nop-ing the terminate path.",
+        "Recommends a concrete diagnostic step (native_crash.py, tombstone analysis, or hook to identify the check)."
+      ],
+      "_targets_reference": "references/native-tamper-and-suicide.md, scripts/native_crash.py"
+    },
+    {
+      "id": 5,
+      "category": "split-apk",
+      "difficulty": "medium",
+      "prompt": "I pulled the app from the device and got base.apk plus four split_config.*.apk files. I merged them into a single APK, patched the merged file, re-signed it, and now the install fails with INSTALL_FAILED_INVALID_APK. Each individual file verifies fine with apksigner.",
+      "expected_output": "The answer should: (1) explain that a split APK set requires all members signed with the same key and installed together via pm install-multiple, (2) warn that merging is not always legal — some splits contain resources or native libraries whose paths overlap, (3) check whether the merge tool preserved the split markers and whether the merged APK's resource table is coherent, (4) offer the alternative path of patching the split in-place and re-signing the whole set with one keystore, (5) reference split-apk.md.",
+      "_assertions": [
+        "Identifies this as a split APK problem, not a generic signing issue.",
+        "Mentions pm install-multiple for installing split sets.",
+        "Warns that merging splits is not always safe or legal.",
+        "Recommends patching the individual split and re-signing the whole set with one key.",
+        "References split-apk.md."
+      ],
+      "_targets_reference": "references/split-apk.md, references/repack-and-sign.md"
+    },
+    {
+      "id": 6,
+      "category": "ad-removal",
+      "difficulty": "medium",
+      "prompt": "I want to remove all ads from this app. I found com.google.android.gms.ads in the DEX strings. Should I just delete that class and repack?",
+      "expected_output": "The answer should: (1) warn that deleting an ad SDK class breaks the app because other classes reference it, (2) explain the correct approach: trace the wrapper class, patch the initialization or render call, not the SDK itself, (3) distinguish between ad SDK calls, server-sent ad config (the most commonly misdiagnosed shape), and rendering-layer ads, (4) recommend counting the SDK's log lines before and after (n→0, not 'I did not see it'), (5) warn about cached config and remote re-enable, (6) reference ad-removal.md and server-config-and-updates.md.",
+      "_assertions": [
+        "Explicitly warns against deleting the ad SDK class.",
+        "Recommends tracing the wrapper and patching the call, not the SDK.",
+        "Distinguishes at least two ad shapes (SDK call vs server-sent config).",
+        "Mentions verification by counting SDK log lines (n→0).",
+        "Warns about cached config or remote re-enable.",
+        "References ad-removal.md."
+      ],
+      "_targets_reference": "references/ad-removal.md, references/server-config-and-updates.md"
+    },
+    {
+      "id": 7,
+      "category": "dynamic-analysis",
+      "difficulty": "hard",
+      "prompt": "This app is packed with Tencent Legu. I need to dump the real DEX from memory and patch it. The app is on a rooted device with Frida. How should I proceed?",
+      "expected_output": "The answer should follow a structured approach: (1) identify Tencent Legu via the manifest's Application class (com.tencent.StubShell.* or similar), (2) explain the dump strategy: use spawn-gating to attach early, wait for the unpacker to write the real DEX to memory, then dump the writable anonymous mappings, (3) warn that the dump window is narrow — too early gets the encrypted payload, too late may get a re-encrypted version, (4) recommend dex_mem_scan.py to find and cut DEX from memory plus dex_dump_validate.py to judge the dump quality (stub% measurement), (5) mention de-duplication by hash, (6) reference advanced-unpacking.md for the full procedure, (7) note that if the dump produces only stubs (100% stub ratio), this is an extraction shell and recovery requires a different route.",
+      "_assertions": [
+        "Identifies the packer correctly from manifest clues.",
+        "Describes the spawn-gating / memory dump approach.",
+        "Warns about the dump window timing (too early = encrypted, too late = re-encrypted).",
+        "Recommends dex_mem_scan.py and dex_dump_validate.py by name.",
+        "Mentions de-duplication of dumped DEX files by hash.",
+        "Warns about extraction shell stubs and how to detect them (stub% ratio).",
+        "References advanced-unpacking.md."
+      ],
+      "_targets_reference": "references/advanced-unpacking.md, references/packers.md, scripts/dex_mem_scan.py, scripts/dex_dump_validate.py"
     }
   ]
 }

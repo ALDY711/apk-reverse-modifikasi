@@ -5,6 +5,7 @@ license: MIT — see LICENSE at the repository root
 compatibility: "Python 3.9+. Device work needs adb; dynamic analysis a matching frida-server; re-signing zipalign plus apksigner, not just a JVM. Static dex/ELF work and the leak scanner are offline. Run doctor.py --json for status."
 metadata:
   version: "1.0"
+  modified_by: "ALDY"
   capability_registry: skills/apk-reverse/scripts/capabilities.py
   evidence_summary: skills/apk-reverse/references/evidence-summary.md
   last_reconstruction_pass: "2026-09-22"
@@ -12,6 +13,8 @@ metadata:
 ---
 
 # APK Reverse Engineering & Patching
+
+> *Dimodifikasi dan disempurnakan oleh ALDY*
 
 Goal: reach a **verified, installable, still-working artifact** fast — and avoid the whole class of
 mistakes that destroy an APK while looking completely healthy.

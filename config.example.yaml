@@ -1,0 +1,103 @@
+# apk-reverse — Konfigurasi Proyek
+# Salin file ini menjadi config.yaml dan sesuaikan dengan lingkungan Anda.
+# Skrip-skrip akan membaca config.yaml dari direktori kerja atau dari
+# variabel lingkungan APK_REVERSE_CONFIG.
+
+# ── Lingkungan ──────────────────────────────────────────────────────────
+environment:
+  # Sistem operasi: windows | linux | macos
+  platform: windows
+
+  # Python interpreter (biarkan kosong untuk default)
+  python: ""
+
+  # Direktori kerja utama untuk output analisis
+  work_dir: "./work"
+
+  # Direktori output untuk laporan
+  report_dir: "./reports"
+
+# ── Perangkat Android ──────────────────────────────────────────────────
+device:
+  # Serial perangkat (kosongkan untuk auto-detect)
+  serial: ""
+
+  # Apakah perangkat sudah di-root?
+  rooted: false
+
+  # Framework yang terinstall: none | magisk | kernelsu | apatch
+  root_framework: "none"
+
+  # LSPosed/Xposed tersedia?
+  lsposed: false
+
+# ── Toolchain ──────────────────────────────────────────────────────────
+tools:
+  # Path eksplisit (kosongkan untuk auto-detect dari PATH)
+  adb: ""
+  java: ""
+  jadx: ""
+  apktool: ""
+  zipalign: ""
+  apksigner: ""
+  uber_apk_signer: ""
+  keytool: ""
+  dexdump: ""
+  baksmali: ""
+
+  # Frida
+  frida_server: ""
+  frida_version: ""
+
+# ── Signing ────────────────────────────────────────────────────────────
+signing:
+  # Keystore untuk re-signing (akan di-generate jika tidak ada)
+  keystore: "./debug.keystore"
+
+  # Alias kunci
+  key_alias: "androiddebugkey"
+
+  # Catatan: password TIDAK disimpan di sini.
+  # Password tersimpan di <keystore>.pass.txt (auto-generate).
+
+# ── Analisis ───────────────────────────────────────────────────────────
+analysis:
+  # Tingkat kedalaman: quick | standard | deep
+  depth: "standard"
+
+  # Aktifkan analisis string otomatis?
+  auto_strings: true
+
+  # Aktifkan scan kebocoran data sebelum commit?
+  auto_leak_scan: true
+
+  # Simpan hash SHA-256 dari setiap artefak?
+  hash_artifacts: true
+
+  # Batas waktu per operasi (detik)
+  timeout: 900
+
+# ── Laporan ────────────────────────────────────────────────────────────
+reporting:
+  # Format output: markdown | html | json | all
+  format: "markdown"
+
+  # Bahasa laporan: en | id
+  language: "id"
+
+  # Sertakan screenshot otomatis?
+  auto_screenshot: true
+
+  # Template kustom (kosongkan untuk default)
+  template: ""
+
+# ── Logging ────────────────────────────────────────────────────────────
+logging:
+  # Level: debug | info | warning | error
+  level: "info"
+
+  # Simpan log ke file?
+  to_file: true
+
+  # Direktori log
+  log_dir: "./logs"

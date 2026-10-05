@@ -1,0 +1,31 @@
+# apk-reverse — Python dependencies
+# Install: pip install -r requirements.txt
+#
+# Core (offline analysis — no device needed)
+# These are the third-party packages that scripts/ actually imports.
+# stdlib-only scripts (most of them) need nothing beyond Python 3.9+.
+
+# --- Dex / ELF / binary analysis ---
+lief>=0.14.0              # ELF parsing (elf_plt.py, native_crash.py, so_constpatch.py)
+capstone>=5.0.0           # Disassembly (so_constpatch.py ARM/ARM64 patches)
+
+# --- Crypto & hashing ---
+pycryptodome>=3.19.0      # AES decrypt for blob_decode.py
+
+# --- Network & protocol ---
+requests>=2.31.0          # HTTP probing (probe_api.py, tls_check.py)
+protobuf>=4.25.0          # Protobuf decode (protobuf_decode_raw.py)
+mitmproxy>=10.0.0         # TLS interception (optional, for tls_check.py deep mode)
+
+# --- Frida (dynamic analysis — needs a rooted device) ---
+frida-tools>=12.0.0       # Frida CLI + Python bindings (frida_rpc_serve.py, spawn_patch_detach.py)
+
+# --- Output & reporting ---
+rich>=13.0.0              # Pretty terminal output (doctor.py, report_generator.py)
+jinja2>=3.1.0             # HTML report generation (report_generator.py)
+pyyaml>=6.0               # Config parsing (config.yaml support)
+
+# --- Development / testing ---
+pytest>=7.0.0             # Test runner
+mypy>=1.0.0               # Type checking
+flake8>=6.0.0             # Linting

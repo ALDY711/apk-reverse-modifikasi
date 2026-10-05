@@ -24,6 +24,8 @@
 
 # apk-reverse
 
+> 🛠️ **由 ALDY 进行修改与定制** (Dimodifikasi oleh ALDY) — 扩展 npx 运行器、多技能封装与 Web 逆向工具集。
+
 面向 Android APK 逆向工程、去臃肿、去广告、外科式 dex 补丁、重打包，以及运行时/服务端分析的 Agent Skill。
 
 它是一个 **skill**，不是教程：它是写给 agent（Claude Code、Codex，或任何支持 Agent Skills 格式的 harness）在工作过程中加载的，因此按 progressive disclosure（渐进披露）来组织——一份简短、面向决策的 `SKILL.md`，只在某一步真正需要时才加载的详细 references，以及可直接运行的参数化脚本。
@@ -455,3 +457,11 @@ Proudly supported by the [LINUX DO](https://linux.do) community.
 - **你的使用由你自己负责。** 作者与贡献者不对因使用或误用本仓库而产生的任何损失、损害、法律后果或服务中断承担任何责任，也不与任何可能被用于检查的应用、厂商或平台存在隶属、背书或代理关系。
 - **测试数据不在此分发。** 样本、dump 和设备产物被刻意排除在这棵树之外（`.gitignore` 排除了它们），只存在于本地被忽略的工作区中。你为了跟做而取得的任何东西，都由你自己负责保管，并在用完后删除 —— 遵守你本地的规则以及样本自带的条款。本仓库*确实*发表的是方法与证据，且已移除全部目标身份。
 - **无隶属关系。** 工具、库、加固产品和公开挑战目标的名字出现，只是为了让材料可复用；它们属于各自的拥有者，本项目与它们没有关联。
+
+---
+
+## 许可证与致谢 (License & Credits)
+
+- **原始许可证:** [MIT](LICENSE) — Copyright (c) 2026 apk-reverse contributors.
+- **修改与增强:** 由 **ALDY** 修改与维护 (Dimodifikasi oleh ALDY).
+

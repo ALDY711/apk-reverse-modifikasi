@@ -127,8 +127,10 @@ _54 row(s) below the header._
 | `references/kernel-and-environment-hardening.md` | Userspace hooking provably cannot reach the check — raw `svc` syscalls, `init_array`-early detection: what each layer can still do, the kernel-route map with its version gate, and when escalating is wrong |
 | `references/on-device-tooling.md` | Working **from the phone itself**: MT Manager edit/repack/sign and its built-in APK MCP, LSPosed Manager, Termux+frida, and on-device data inspection |
 | `references/split-apk.md` | The target is a **split APK / App Bundle set** (`base.apk` + `split_config.*.apk`), or `pm path <PKG>` returned several files: reading a set, merge versus unified re-signing, and the install refusal each mistake produces |
+| `references/panduan-cepat.md` | Panduan cepat langkah-demi-langkah Bahasa Indonesia untuk alur kerja skill |
+| `references/web-reverse.md` | Web reverse engineering: Source Maps (.js.map) extraction, JS deobfuscation, and API dynamic tokens/signatures |
 
-_43 row(s) below the header._
+_45 row(s) below the header._
 
 ## Script index (no longer inline in `SKILL.md`)
 
@@ -190,5 +192,15 @@ _43 row(s) below the header._
 | `scripts/scan_leaks.py` | Scan a repository for target identity before it is published: bundle ids in manifest/`pm`/`ps` contexts, serial-shaped tokens, PATs, inline appkey assignments, literal endpoints, host user paths. Built-in do-not-anonymize exemptions, context-bearing findings, `--show-exempt` prints why a hit was suppressed, `--fail-on strong\|any`, exit 0/1/2 with a `RESULT=` token |
 | `scripts/svc_scan.py` | Name the syscall behind an inline `svc` and the segment it sits in — which decides whether a libc-level hook can observe the call at all. `--context` shows neighbours, because a byte scan also matches data |
 | `scripts/anti_detect_probe.js` | Observer-only probe (patches nothing): path/loader/thread/kill hooks with **caller module + offset**, an environment self-report (`TracerPid`, frida-named mappings), and live streaming so a sub-second target still yields evidence |
+| `scripts/report_generator.py` | Generate analysis reports in Markdown, HTML, or JSON format with risk assessments |
+| `scripts/sourcemap_extractor.py` | Extract original source code from JavaScript bundles via Source Maps (.js.map) with folder structure reconstruction |
+| `scripts/web_api_tracer.py` | Trace and reverse engineer Web API signatures, tokens, and cryptographic functions in JavaScript files |
+| `scripts/js_deobfuscator.py` | Deobfuscate, unpack Dean Edwards eval payloads, decode hex/unicode escapes, neutralize debugger loops, and beautify JS |
+| `scripts/web_modifier.py` | Generate Tampermonkey userscripts (.user.js) and run a local Map-Local interceptor proxy to modify live web apps |
+| `scripts/apk_mitm_patch.py` | Inspect and patch APKs for HTTPS inspection, Network Security Config (user CA trust), and generate Frida SSL unpinning scripts |
+| `scripts/apk_debloater.py` | Scan, debloat, and neuter Ad SDKs, tracking components, and telemetry in AndroidManifest.xml and generate no-op smali stubs |
+| `scripts/frida_hook_gen.py` | Generate battle-tested Frida scripts for universal SSL unpinning, root detection bypass, runtime crypto API monitoring, and method tracing |
+| `scripts/jni_export_resolve.py` | Static ELF analysis of .so libraries to discover exported JNI functions, demangle signatures, and generate Frida native interceptors |
+| `scripts/apk_mod_repack.py` | End-to-end APK modification and repackaging pipeline: unpack, inject debuggable/cleartext flags, swap DEX files, 4-byte zipalign, and V1/V2/V3 sign into ready-to-use Android APKs |
 
-_53 row(s) below the header._
+_63 row(s) below the header._

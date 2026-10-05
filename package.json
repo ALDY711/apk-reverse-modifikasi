@@ -1,0 +1,62 @@
+{
+  "name": "apk-reverse",
+  "version": "1.0.0",
+  "description": "Unified toolkit & AI Agent Skills for Android reverse engineering, Frida dynamic instrumentation, DEX/smali patching, and automated APK security analysis.",
+  "main": "bin/apk-reverse.js",
+  "bin": {
+    "apk-reverse": "./bin/apk-reverse.js",
+    "apk-cli": "./bin/apk-reverse.js"
+  },
+  "scripts": {
+    "start": "node bin/apk-reverse.js",
+    "doctor": "node bin/apk-reverse.js doctor",
+    "skills": "node bin/apk-reverse.js --skills",
+    "test": "pytest tests/",
+    "lint": "flake8 ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALDY711/apk-reverse-modifikasi.git"
+  },
+  "keywords": [
+    "apk-reverse",
+    "android",
+    "reverse-engineering",
+    "frida",
+    "smali",
+    "dex-patching",
+    "apktool",
+    "jadx",
+    "mitm",
+    "debloat",
+    "agent-skills",
+    "claude-code",
+    "antigravity",
+    "cursor",
+    "security-audit"
+  ],
+  "author": "newliver666",
+  "contributors": [
+    "ALDY (Dimodifikasi oleh ALDY)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ALDY711/apk-reverse-modifikasi/issues"
+  },
+  "homepage": "https://github.com/ALDY711/apk-reverse-modifikasi#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "docs",
+    "assets",
+    "apk_cli.py",
+    "setup.py",
+    "requirements.txt",
+    "config.example.yaml",
+    "README.md",
+    "LICENSE"
+  ]
+}
