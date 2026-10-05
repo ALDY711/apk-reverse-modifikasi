@@ -23,10 +23,10 @@
 
 ### Cek Lingkungan
 ```bash
-# Jalankan pemeriksaan otomatis
-python setup.py
+# Cara tercepat via npx (tanpa install/clone repo)
+npx @aldy11/apk-reverse doctor
 
-# Atau cek saja tanpa install
+# Atau lewat skrip Python lokal
 python setup.py --check
 ```
 

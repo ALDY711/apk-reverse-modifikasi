@@ -10,8 +10,8 @@ Proyek ini mengikuti [Semantic Versioning](https://semver.org/lang/id/).
 ## [1.2.0] — 2026-10-05 (Modifikasi oleh ALDY)
 
 ### Ditambahkan
-- **npx CLI Runner** (`bin/apk-reverse.js`) — Executable Node.js cross-platform untuk menjalankan seluruh toolkit via `npx apk-reverse <command>` tanpa instalasi manual
-- **package.json** — Konfigurasi npm package untuk distribusi via npm registry dan `npx`
+- **npx CLI Runner** (`bin/apk-reverse.js`) — Executable Node.js cross-platform untuk menjalankan seluruh toolkit via `npx @aldy11/apk-reverse <command>` tanpa instalasi manual
+- **package.json** — Konfigurasi npm package `@aldy11/apk-reverse` untuk distribusi via npm registry dan `npx`
 - **.npmignore** — Filter untuk mengecualikan cache/test saat packaging
 - **Web Reverse Engineering** — 4 modul baru: `sourcemap_extractor.py`, `web_api_tracer.py`, `js_deobfuscator.py`, `web_modifier.py`
 - **README.md** diperluas menjadi ~860 baris dengan dokumentasi komprehensif (Bahasa Indonesia)

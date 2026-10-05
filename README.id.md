@@ -55,17 +55,25 @@ Untuk panduan lengkap langkah demi langkah, baca [`references/panduan-cepat.md`]
 
 ---
 
-## 🛠️ Instalasi
+## 🛠️ Instalasi & Penggunaan
 
-### Via npx (untuk Agent Skills)
+### 1. Langsung via npx (NPM Registry)
+Tidak perlu install apapun, langsung jalankan dari terminal:
 ```bash
-npx skills add newliver666/apk-reverse
+npx @aldy11/apk-reverse doctor
+npx @aldy11/apk-reverse recon --apk target.apk
+npx @aldy11/apk-reverse --skills
 ```
 
-### Manual
+### 2. Pasang ke AI Agent (Antigravity IDE, Claude Code, Cursor)
 ```bash
-git clone https://github.com/newliver666/apk-reverse.git
-cd apk-reverse
+npx skills add ALDY711/apk-reverse-modifikasi
+```
+
+### 3. Manual (Python)
+```bash
+git clone https://github.com/ALDY711/apk-reverse-modifikasi.git
+cd apk-reverse-modifikasi
 pip install -r requirements.txt
 python setup.py
 ```

@@ -67,29 +67,29 @@ python apk_cli.py report --apk target.apk --format html --out report.html
 ### 1. Sebagai AI Agent Skill (Antigravity IDE, Claude Code, Cursor, Copilot)
 Toolkit ini dirancang modular mengikuti standar Agent Skills resmi:
 ```bash
-npx skills add newliver666/apk-reverse              # Install semua skill ke workspace AI agent
-npx skills add newliver666/apk-reverse --list       # Lihat daftar 5 skill yang tersedia
-npx skills add newliver666/apk-reverse --skill apk-reverse -y  # Install satu skill spesifik
-npx skills use newliver666/apk-reverse@apk-reverse  # Jalankan on-demand tanpa install
+npx skills add ALDY711/apk-reverse-modifikasi              # Install semua 5 skill ke workspace AI agent
+npx skills add ALDY711/apk-reverse-modifikasi --list       # Lihat daftar 5 skill yang tersedia
+npx skills add ALDY711/apk-reverse-modifikasi --skill apk-reverse -y  # Install satu skill spesifik
+npx skills use ALDY711/apk-reverse-modifikasi@apk-reverse  # Jalankan on-demand tanpa install
 ```
 
-### 2. Sebagai CLI Tool via npx / npm (Tanpa atau Dengan Instalasi Global)
+### 2. Sebagai CLI Tool via npx / npm (Resmi dari NPM Registry)
 Jalankan 55+ skrip analisis langsung dari terminal menggunakan Node runner:
 ```bash
-# Jalankan langsung tanpa instalasi global:
-npx apk-reverse doctor                              # Cek kesehatan tools & environment
-npx apk-reverse recon --apk target.apk              # Lakukan reconnaissance APK
-npx apk-reverse --skills                            # Tampilkan 5 AI Agent Skills bawaan
+# Jalankan langsung tanpa instalasi:
+npx @aldy11/apk-reverse doctor                              # Cek kesehatan tools & environment
+npx @aldy11/apk-reverse recon --apk target.apk              # Lakukan reconnaissance APK
+npx @aldy11/apk-reverse --skills                            # Tampilkan 5 AI Agent Skills bawaan
 
 # Atau pasang secara global di sistem:
-npm install -g apk-reverse
+npm install -g @aldy11/apk-reverse
 apk-reverse doctor
 ```
 
 ### 3. Manual (Python)
 ```bash
-git clone https://github.com/newliver666/apk-reverse.git
-cd apk-reverse
+git clone https://github.com/ALDY711/apk-reverse-modifikasi.git
+cd apk-reverse-modifikasi
 pip install -r requirements.txt
 python setup.py
 ```

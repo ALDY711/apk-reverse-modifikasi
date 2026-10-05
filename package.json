@@ -1,6 +1,6 @@
 {
   "name": "@aldy11/apk-reverse",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unified toolkit & AI Agent Skills for Android reverse engineering, Frida dynamic instrumentation, DEX/smali patching, and automated APK security analysis.",
   "main": "bin/apk-reverse.js",
   "bin": {

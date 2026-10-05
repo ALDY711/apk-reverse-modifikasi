@@ -4,7 +4,7 @@
  * apk-reverse — Node.js CLI & npx runner
  * 
  * Jembatan executable untuk menjalankan apk_cli.py dan semua modul
- * reverse engineering Android langsung via `npx apk-reverse` atau `npm i -g apk-reverse`.
+ * reverse engineering Android langsung via `npx @aldy11/apk-reverse` atau `npm i -g @aldy11/apk-reverse`.
  * 
  * Dimodifikasi oleh ALDY.
  */
@@ -80,7 +80,7 @@ function handleSkillsList() {
     }
   }
   console.log('Cara pasang ke AI Agent Anda:');
-  console.log('  \x1b[32mnpx skills add newliver666/apk-reverse\x1b[0m\n');
+  console.log('  \x1b[32mnpx skills add ALDY711/apk-reverse-modifikasi\x1b[0m\n');
 }
 
 function main() {
@@ -99,7 +99,7 @@ function main() {
     console.error('\nSolusi:');
     console.error(' 1. Unduh dan install Python dari: https://www.python.org/downloads/');
     console.error(' 2. Pastikan opsi "Add Python to PATH" dicentang saat instalasi.');
-    console.error(' 3. Jalankan kembali: npx apk-reverse doctor\n');
+    console.error(' 3. Jalankan kembali: npx @aldy11/apk-reverse doctor\n');
     process.exit(1);
   }
 
