@@ -4,8 +4,8 @@
   "description": "Unified toolkit & AI Agent Skills for Android reverse engineering, Frida dynamic instrumentation, DEX/smali patching, and automated APK security analysis.",
   "main": "bin/apk-reverse.js",
   "bin": {
-    "apk-reverse": "./bin/apk-reverse.js",
-    "apk-cli": "./bin/apk-reverse.js"
+    "apk-reverse": "bin/apk-reverse.js",
+    "apk-cli": "bin/apk-reverse.js"
   },
   "scripts": {
     "start": "node bin/apk-reverse.js",
