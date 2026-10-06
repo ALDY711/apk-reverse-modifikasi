@@ -17,12 +17,11 @@
   <img src="https://img.shields.io/badge/platform-android-49454F?style=flat-square&logo=android&logoColor=white" alt="android">
 </p>
 
-# apk-reverse
+# apk-reverse & Security Suite: Android Reverse Engineering, Web Security Audit & Cloudflare Bypass Toolkit
 
-> 🛠️ **Dimodifikasi oleh ALDY** — Penambahan runner npx, modul web reverse engineering, dan penyempurnaan tooling.
+> 🛠️ **Dimodifikasi & Dikembangkan oleh ALDY** — Suite Lengkap: Reverse Engineering APK Android, Bypass Cloudflare & WAF, Audit Keamanan Web Standar OWASP Top 10, serta Web Reverse Engineering.
 
-Sebuah **Agent Skill** untuk reverse engineering APK Android, debloating, penghapusan iklan,
-patching DEX bedah, repacking, dan analisis runtime/server.
+Sebuah ekosistem **8 Agent Skills** terpadu untuk reverse engineering aplikasi Android & Web, debloating, pemusnahan iklan, patching DEX bedah, repacking, bypass bot mitigasi Cloudflare tingkat lanjut, serta audit postur pertahanan keamanan web tingkat enterprise.
 
 Ini adalah **skill**, bukan tutorial: dirancang untuk dimuat oleh agen AI (Claude Code, Codex,
 Google Antigravity IDE, atau harness mana pun yang mendukung format Agent Skills) saat bekerja.
@@ -89,19 +88,20 @@ Salin skills/apk-reverse/ ke ~/.gemini/config/skills/apk-reverse/
 
 ---
 
-## ✨ Kemampuan Utama
+## ✨ Kemampuan Utama (8 Domain)
 
 | Kategori | Kemampuan |
 |---|---|
-| 🔍 **Rekon** | Identifikasi packer, SDK, lokasi kode, pemeriksaan tamper |
+| 🔍 **Rekon APK** | Identifikasi packer, SDK, lokasi kode, pemeriksaan tamper |
 | 🔧 **Patching** | Byte-level DEX edit, string patch, native .so patch, method rewrite |
 | 📦 **Repack** | Align, sign ulang, handle split APK, preservasi metadata ZIP |
-| 🛡️ **Keamanan** | Scan kebocoran data, TLS/cert analysis, signature verification |
+| 🛡️ **Keamanan Android** | Scan kebocoran data, TLS/cert analysis, signature verification |
 | 🔬 **Dinamis** | Frida probe/hook/RPC/Stalker, memory DEX dump, cold-start analysis |
 | 📱 **Device** | Preflight check, install & test, screenshot otomatis |
-| 📊 **Laporan** | Generate laporan MD/HTML/JSON dengan penilaian risiko |
-| 🧩 **Advanced** | VMP differential, Java2C detection, kernel-level analysis |
-| 🌐 **Web Reverse** | Ekstraksi Source Map, deobfuskasi JS, netralkan anti-debug, tracing API, Userscript & proxy |
+| 🌐 **Web Reverse** | Ekstraksi Source Map (.js.map), deobfuskasi JS/AST, netralkan anti-debug, tracing API |
+| ☁️ **Bypass Cloudflare** | Solved Turnstile tokens, evasive JA4 TLS spoofing, IUAM, Bot Fight Mode & Direct-to-Origin |
+| 🛡️ **Security Web (OWASP)** | Audit HTTP Security Headers (Grade A+ - F), mitigasi CORS & CSRF, pemindai secret Shannon Entropy, dan hardening Laravel/Nginx |
+| 📊 **Laporan** | Generate laporan MD/HTML/JSON dengan penilaian risiko terpadu |
 
 ---
 

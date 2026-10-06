@@ -19,46 +19,61 @@
 </p>
 
 <p align="center">
-  <a href="#-mulai-cepat">Mulai Cepat</a> · <a href="#-fitur-lengkap">Fitur</a> · <a href="#-5-agent-skills">Skills</a> · <a href="#-65-script-otomasi">Script</a> · <a href="#-46-dokumen-referensi-teknis">Referensi</a> · <a href="#-workflow-4-gate">Workflow</a> · <a href="#-perintah-cli-lengkap">CLI</a> · <a href="#-prasyarat">Prasyarat</a> · <a href="#%EF%B8%8F-disclaimer">Disclaimer</a>
+  <a href="#-mulai-cepat">Mulai Cepat</a> · <a href="#-fitur-lengkap">Fitur</a> · <a href="#-8-agent-skills">Skills (8)</a> · <a href="#-88-script-otomasi">Script (88+)</a> · <a href="#-66-dokumen-referensi-teknis">Referensi (66+)</a> · <a href="#-workflow-4-gate">Workflow</a> · <a href="#-perintah-cli-lengkap">CLI</a> · <a href="#-prasyarat">Prasyarat</a> · <a href="#%EF%B8%8F-disclaimer">Disclaimer</a>
 </p>
 
 ---
 
-# apk-reverse
+# apk-reverse & Security Suite: Android Reverse Engineering, Web Security Audit & Cloudflare Bypass Toolkit
 
-> 🛠️ **Dimodifikasi oleh ALDY** — Penambahan runner executable npx, optimasi 5 AI Agent Skills, modul web reverse, dan dokumentasi komprehensif.
+> 🛠️ **Dimodifikasi & Dikembangkan oleh ALDY** — Framework All-in-One: Reverse Engineering Android APK (DEX & Native), Bypass Cloudflare WAF & Turnstile, Audit Keamanan Web Standar OWASP Top 10, serta Analisis Web Client-Side (SPA/Webpack/Vite).
 
-Sebuah **Agent Skill** untuk reverse engineering APK Android, debloating, penghapusan iklan,
-patching DEX bedah (surgical), repacking, dan analisis runtime/server.
+Sebuah ekosistem **8 Agent Skills** terpadu untuk reverse engineering aplikasi Android & Web, debloating, pemusnahan iklan, patching DEX bedah, repacking, bypass bot mitigasi Cloudflare tingkat lanjut, serta audit postur pertahanan keamanan web tingkat enterprise.
 
-Ini adalah **skill**, bukan tutorial — dirancang untuk dimuat oleh agen AI (Claude Code, Codex,
-Google Antigravity IDE, atau harness lainnya) saat bekerja. Terstruktur untuk **progressive
-disclosure**: `SKILL.md` yang berorientasi keputusan, referensi detail dimuat hanya saat diperlukan,
-dan skrip terparameterisasi yang bisa langsung dijalankan.
+Ini adalah **kumpulan skills**, bukan sekadar tutorial — dirancang untuk dimuat secara modular oleh agen AI (**Google Antigravity IDE, Claude Code, Cursor, Codex**, atau harness AI lainnya) maupun dieksekusi langsung via CLI / `npx`. Terstruktur dengan prinsip **progressive disclosure**: manual `SKILL.md` berorientasi keputusan, 66+ referensi teknis yang dimuat on-demand, dan 88+ skrip terparameterisasi siap pakai.
 
 ---
 
 ## ⚡ Mulai Cepat
 
+### A. Android APK Reverse Engineering
 ```bash
-# 1. Clone repository
-git clone https://github.com/newliver666/apk-reverse.git
-cd apk-reverse
-
-# 2. Setup otomatis (periksa Python, install dependensi, cek tools)
-python setup.py
-
-# 3. Periksa kesehatan lingkungan kerja
+# 1. Periksa kesehatan tools dan environment
 python apk_cli.py doctor
 
-# 4. Mulai analisis target
+# 2. Lakukan reconnaissance pada file APK target
 python apk_cli.py recon --apk target.apk
 
-# 5. Generate laporan analisis
+# 3. Generate laporan analisis interaktif (HTML dark-mode/JSON)
 python apk_cli.py report --apk target.apk --format html --out report.html
 ```
 
-> 📖 Panduan langkah demi langkah lengkap tersedia di [`skills/apk-reverse/references/panduan-cepat.md`](skills/apk-reverse/references/panduan-cepat.md).
+### B. Web Security Audit & Vulnerability Scanning
+```bash
+# 1. Audit HTTP Security Headers & Cookie Flags URL Live (Skor Grade A+ s/d F)
+python skills/web-security-audit/scripts/security_headers_audit.py --url https://target-web.com
+
+# 2. Pindai kebocoran kunci API & string entropi tinggi (Shannon Entropy) pada codebase
+python skills/web-security-audit/scripts/secret_scanner.py --path ./my-web-project
+
+# 3. Audit form tanpa proteksi CSRF (@csrf) dan aksi state-change GET berisiko
+python skills/web-security-audit/scripts/csrf_audit.py --url https://target-web.com
+
+# 4. Uji kebijakan CORS terhadap arbitrary origin reflection & credential leaks
+python skills/web-security-audit/scripts/cors_audit.py --url https://target-web.com/api/user
+```
+
+### C. Cloudflare & WAF Bypass Diagnostics
+```bash
+# 1. Deteksi lapisan pertahanan Cloudflare (Turnstile, IUAM, Bot Fight Mode)
+python skills/cf-bypass/scripts/cf_detector.py --url https://protected-site.com
+
+# 2. Pencarian IP server asal (Direct-to-Origin) untuk bypass Cloudflare WAF total
+python skills/cf-bypass/scripts/cf_origin_finder.py --domain protected-site.com
+
+# 3. Validasi TLS Fingerprint JA3/JA4 terhadap Cloudflare Bot Management
+python skills/cf-bypass/scripts/cf_tls_check.py --url https://protected-site.com
+```
 
 ---
 
@@ -67,19 +82,19 @@ python apk_cli.py report --apk target.apk --format html --out report.html
 ### 1. Sebagai AI Agent Skill (Antigravity IDE, Claude Code, Cursor, Copilot)
 Toolkit ini dirancang modular mengikuti standar Agent Skills resmi:
 ```bash
-npx skills add ALDY711/apk-reverse-modifikasi              # Install semua 5 skill ke workspace AI agent
-npx skills add ALDY711/apk-reverse-modifikasi --list       # Lihat daftar 5 skill yang tersedia
-npx skills add ALDY711/apk-reverse-modifikasi --skill apk-reverse -y  # Install satu skill spesifik
-npx skills use ALDY711/apk-reverse-modifikasi@apk-reverse  # Jalankan on-demand tanpa install
+npx skills add ALDY711/apk-reverse-modifikasi              # Install semua 8 skills ke workspace AI agent
+npx skills add ALDY711/apk-reverse-modifikasi --list       # Lihat daftar 8 skills yang tersedia
+npx skills add ALDY711/apk-reverse-modifikasi --skill web-security-audit -y  # Install satu skill spesifik
+npx skills use ALDY711/apk-reverse-modifikasi@cf-bypass    # Jalankan on-demand tanpa install
 ```
 
-### 2. Sebagai CLI Tool via npx / npm (Resmi dari NPM Registry)
-Jalankan 55+ skrip analisis langsung dari terminal menggunakan Node runner:
+### 2. Sebagai CLI Tool via npx / npm
+Jalankan 88+ skrip analisis langsung dari terminal menggunakan Node runner:
 ```bash
 # Jalankan langsung tanpa instalasi:
 npx @aldy11/apk-reverse doctor                              # Cek kesehatan tools & environment
 npx @aldy11/apk-reverse recon --apk target.apk              # Lakukan reconnaissance APK
-npx @aldy11/apk-reverse --skills                            # Tampilkan 5 AI Agent Skills bawaan
+npx @aldy11/apk-reverse --skills                            # Tampilkan 8 AI Agent Skills bawaan
 
 # Atau pasang secara global di sistem:
 npm install -g @aldy11/apk-reverse
@@ -96,7 +111,7 @@ python setup.py
 
 ### 4. Di Google Antigravity IDE
 ```bash
-# Sebagai workspace skill:
+# Sebagai workspace skill (disarankan):
 Salin folder skills/ ke .agents/skills/ di direktori proyek Anda.
 
 # Sebagai global skill:
@@ -168,11 +183,29 @@ Salin folder skills/ ke ~/.gemini/config/skills/
 - **Native crash analysis** — lokasi native death: signal, fault address, registers, frames
 
 ### 🌐 Web Reverse Engineering
-- **Source Map extraction** — ekstrak file sumber asli dari JS bundle
-- **API tracer** — trace Axios/Fetch interceptor, Crypto, API endpoints
-- **JS deobfuscator** — deobfuscate JS, unpack p.a.c.k.e.r, neutralize debugger
-- **Userscript generator** — generate Tampermonkey userscript
-- **Map-Local proxy** — serve HTTP interceptor proxy untuk modifikasi lokal
+- **Source Map extraction** — ekstrak file sumber asli dari JS bundle via `.js.map`
+- **AST deobfuscation** — unravelling obfuscator.io, constant folding, dead-code elimination
+- **Webpack & Vite unpacking** — dump chunk bundle menjadi struktur direktori project asli
+- **API tracer** — trace Axios/Fetch interceptor, cryptographic signing, API endpoints
+- **Anti-debugging neutralization** — bypass infinite `debugger` loop, timing checks, dan console neutering
+- **WebAssembly analysis** — inspeksi memori linear WASM dan export/import table hooks
+- **Userscript generator** — generate Tampermonkey userscript & Map-Local proxy
+
+### ☁️ Cloudflare & Anti-Bot Bypass
+- **Turnstile challenge solver** — otomatisasi pemecahan Cloudflare Turnstile token via API & headless browser
+- **Bot Fight Mode & IUAM evasion** — bypass "I'm Under Attack Mode" dan mitigasi JavaScript Challenge
+- **TLS JA3/JA4 fingerprinting** — kustomisasi Client Hello cipher suites, extension ordering, dan GREASE
+- **HTTP/2 frame fingerprinting** — imitasi SETTINGS frames, WINDOW_UPDATE, dan pseudo-header priority browser Chrome
+- **Direct-to-Origin discovery** — identifikasi IP asli server di balik Cloudflare via DNS history, SSL certificates, dan subdomain leaks
+- **Rebrowser & Ghost Cursor integration** — eliminasi deteksi CDP runtime (`Runtime.enable`, `cdc_` markers) dan pergerakan mouse kurva Bezier
+
+### 🛡️ Web Security Audit & Hardening
+- **OWASP Top 10 compliance** — pemindaian komprehensif risiko broken access control, injection, dan cryptographic failures
+- **Automated HTTP security headers grading** — skoring A+ s/d F untuk CSP, HSTS, X-Frame-Options, Permissions-Policy
+- **Secret scanner (Shannon Entropy)** — pemindaian kebocoran kunci API (AWS, Stripe, GitHub, Firebase) dan high-entropy secrets
+- **CORS misconfiguration audit** — deteksi arbitrary origin reflection, null origin risks, dan wildcard credentials
+- **CSRF & state-change audit** — deteksi form tanpa token `@csrf` dan tautan GET sensitif
+- **Laravel & Nginx remediation recipes** — resep konfigurasi langsung untuk framework Laravel 10/11 dan server Nginx/Apache
 
 ### 📊 Pelaporan
 - **Markdown** — laporan dengan tabel dan badge
@@ -199,9 +232,9 @@ Salin folder skills/ ke ~/.gemini/config/skills/
 
 ---
 
-## 📁 5 Agent Skills
+## 📁 8 Agent Skills
 
-Repository ini menyediakan **5 skill modular** di bawah `skills/`:
+Repository ini menyediakan **8 skill modular** di bawah `skills/`:
 
 ### 1. ⭐ `apk-reverse` — Skill Inti (Terbesar)
 
@@ -282,11 +315,105 @@ Kemas ulang APK yang dimodifikasi menjadi artifact installable.
 | `apk-signing-schemes.md` | Perbedaan skema signing V1, V2, V3 |
 | `zipalign-and-compression.md` | Aturan alignment dan kompresi |
 
+### 6. ☁️ `cf-bypass` — Cloudflare WAF & Anti-Bot Evasion
+
+Bypass dan otomatisasi mitigasi Cloudflare IUAM, Turnstile challenges, Bot Fight Mode, dan Enterprise WAF.
+
+```
+skills/cf-bypass/
+├── SKILL.md              ← Manual arsitektur 15 bagian + aturan R1-R14 (35 KB)
+├── scripts/              ← 10 script otomasi deteksi, TLS, & solver
+└── references/           ← 8 dokumen teknis internal Cloudflare
+```
+
+| Script | Fungsi |
+|--------|--------|
+| `cf_detector.py` | Deteksi lapisan proteksi CF: IUAM, Turnstile, BFM, WAF |
+| `turnstile_api_solver.py` | Solver otomatis token Cloudflare Turnstile |
+| `cf_origin_finder.py` | Cari IP origin di balik CF via DNS history, certs & subdomains |
+| `cf_tcp_tuner.py` | Tuning TCP stack (MSS, Window Scale, SACK) untuk menyamai OS |
+| `cf_tls_check.py` | Analisis fingerprint TLS (JA3/JA4) dan cipher suites |
+| `cf_session.py` | Wrapper session HTTP anti-bot (curl_cffi/cloudscraper) |
+| `cf_cantarella_client.py` | Integrasi Cantarella/Rebrowser untuk bypass tingkat tinggi |
+| `cf_cookie_inspector.py` | Audit cookie Cloudflare (`cf_clearance`, `__cf_bm`) |
+| `cf_worker_proxy.js` | Reverse proxy edge via Cloudflare Worker |
+| `cf_pipeline.js` | Pipeline eksekusi headless browser anti-deteksi |
+
+| Referensi | Topik |
+|-----------|-------|
+| `cloudflare-turnstile-internals.md` | Anatomi Turnstile, telemetri cData, dan challenge flow |
+| `tls-fingerprinting-and-ja4-suite.md` | Spesifikasi JA3, JA4, cipher order, ALPN, GREASE |
+| `http2-and-quic-frame-fingerprinting.md` | Karakteristik frame HTTP/2 dan deteksi QUIC |
+| `v8-engine-and-browser-internals.md` | Evasion deteksi V8 prototype, console, dan memory |
+| `canvas-webgl-audiocontext-deep-dive.md` | Bypass sidik jari perangkat keras (Canvas/WebGL/Audio) |
+| `origin-discovery-playbook.md` | Playbook komprehensif menemukan IP origin server |
+| `browser-automation-evasion-matrix.md` | Matriks stealth Playwright, Puppeteer, Camoufox |
+| `proxy-networks-and-ip-reputation.md` | Manajemen IP reputasi, ASN scoring, dan residential proxy |
+
+### 7. 🌐 `web-reverse` — Web Application Reverse Engineering
+
+Deobfuscasi client-side, ekstraksi Source Maps v3, rekonstruksi Webpack/Vite bundle, dan tracing API request signing.
+
+```
+skills/web-reverse/
+├── SKILL.md              ← Manual deobfuscasi, anti-debug, & AST (34.6 KB)
+├── scripts/              ← 8 script ekstraksi, deobfuscator, & hook tracer
+└── references/           ← 4 dokumen arsitektur web client-side
+```
+
+| Script | Fungsi |
+|--------|--------|
+| `sourcemap_extractor.py` | Ekstraksi file source code asli dari file `.js.map` |
+| `webpack_unpacker.py` | Unpack chunk Webpack/Vite menjadi struktur folder project |
+| `js_deobfuscator.py` | Deobfuscate AST, unpack p.a.c.k.e.r, decode string array |
+| `web_api_tracer.py` | Trace Fetch, Axios, WebSocket, dan kriptografi frontend |
+| `devtools_hook_generator.py` | Generator skrip Tampermonkey / Console hook instan |
+| `har_analyzer.py` | Analisis file HTTP Archive (HAR) untuk ekstraksi flow API |
+| `ws_inspector.py` | Inspeksi dan decodes frame WebSocket real-time |
+| `web_modifier.py` | Proxy interceptor Map-Local untuk live tampering |
+
+| Referensi | Topik |
+|-----------|-------|
+| `ast-deobfuscation-and-unravelling.md` | Teknik manipulasi AST Babel/Esprima untuk deobfuscasi |
+| `webpack-and-vite-bundle-internals.md` | Anatomi chunk loader Webpack 5 dan Rollup/Vite ESM |
+| `api-signature-and-request-signing-playbook.md` | Reverse engineering tanda tangan HMAC/SHA256 request API |
+| `wasm-reverse-engineering-and-memory-hooking.md` | Disassembly WebAssembly (WAT), linear memory, dan JNI-like exports |
+
+### 8. 🛡️ `web-security-audit` — OWASP Top 10 Audit & Defensive Hardening
+
+Audit postur pertahanan aplikasi web, verifikasi kepatuhan OWASP, pengujian keamanan header, mitigasi CORS/CSRF, serta scanning kebocoran kredensial statis.
+
+```
+skills/web-security-audit/
+├── SKILL.md              ← Manual master audit defensif 15 bab (30.2 KB)
+├── scripts/              ← 5 script audit header, CORS, CSRF, & secret scanner
+└── references/           ← 8 dokumen pengerasan standar OWASP & framework
+```
+
+| Script | Fungsi |
+|--------|--------|
+| `security_headers_audit.py` | Audit live HTTP security headers (Grade A+ s/d F) + generator config |
+| `cors_audit.py` | Uji pantulan arbitrary origin, null origin, & wildcard credentials |
+| `csrf_audit.py` | Audit form POST tanpa token CSRF & link GET sensitif |
+| `secret_scanner.py` | Pindai kebocoran kunci API & string Shannon Entropy $H(X) \ge 4.2$ |
+| `static_code_audit.py` | Pindai sintaks rawan, APP_DEBUG=true, raw output `{!!`, dan fungsi eval |
+
+| Referensi | Topik |
+|-----------|-------|
+| `owasp-secure-headers-guide.md` | Panduan lengkap CSP, HSTS, X-Frame-Options, Permissions-Policy |
+| `cors-hardening-playbook.md` | Buku panduan konfigurasi CORS yang aman dan anti-bocor |
+| `laravel-security-hardening-bible.md` | Manual pengerasan arsitektur Laravel 10 & 11 (Session, .env, Middleware) |
+| `owasp-top-10-defensive-manual.md` | Analisis defensif dan mitigasi 10 risiko utama OWASP Top 10 |
+| `api-security-and-jwt-hardening.md` | Pengamanan REST/GraphQL API, mitigasi serangan JWT, BOLA/IDOR |
+| `secure-file-upload-architecture.md` | Arsitektur upload aman, anti-RCE, re-encoding GD, & isolasi web server |
+| `content-security-policy-deep-dive.md` | CSP Level 3, cryptographic nonce, mode Report-Only |
+| `database-and-orm-hardening.md` | SQLi defense, PDO parameter binding, & mitigasi Mass Assignment |
+
 ---
 
-## 🛠️ 65+ Script Otomasi
+## 🛠️ 88+ Script Otomasi
 
-Semua script berada di `skills/apk-reverse/scripts/` dan bisa dijalankan langsung atau melalui CLI unified (`apk_cli.py`).
+Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/scripts/` dan dapat dijalankan langsung via Python/Node atau melalui runner terintegrasi.
 
 ### 🏥 Diagnostik & Environment
 
@@ -364,14 +491,43 @@ Semua script berada di `skills/apk-reverse/scripts/` dan bisa dijalankan langsun
 | `stalker_report.py` | 10 KB | Reduce stalker log → block histograms + call sequences |
 | `frida_hook_gen.py` | 11 KB | Generator script Frida (unpin, root, crypto) |
 
-### 🌍 Web Reverse Engineering
+### 🌍 Web Reverse Engineering (`skills/web-reverse/scripts/`)
 
 | Script | Ukuran | Fungsi |
 |--------|--------|--------|
 | `sourcemap_extractor.py` | 16 KB | Ekstrak source files dari JS bundle via Source Maps (.js.map) |
-| `web_api_tracer.py` | 11 KB | Trace Axios/Fetch interceptor, Crypto, API endpoints |
+| `webpack_unpacker.py` | 14 KB | Unpack chunk bundle Webpack/Vite menjadi file source asli |
 | `js_deobfuscator.py` | 12 KB | Deobfuscate JS, unpack p.a.c.k.e.r, decode hex escapes, neutralize debugger |
+| `web_api_tracer.py` | 11 KB | Trace Axios/Fetch interceptor, Crypto, API endpoints |
+| `devtools_hook_generator.py` | 9.8 KB | Generator console hooks & Tampermonkey userscript instan |
+| `har_analyzer.py` | 10 KB | Analisis file HTTP Archive (HAR) untuk ekstrak alur API rahasia |
+| `ws_inspector.py` | 8.5 KB | Inspeksi & decode traffic WebSocket interaktif |
 | `web_modifier.py` | 14 KB | Generate Tampermonkey userscript & Map-Local HTTP interceptor proxy |
+
+### ☁️ Cloudflare & Anti-Bot Bypass (`skills/cf-bypass/scripts/`)
+
+| Script | Ukuran | Fungsi |
+|--------|--------|--------|
+| `cf_detector.py` | 12 KB | Deteksi proteksi CF: IUAM, Turnstile, Bot Fight Mode, Enterprise WAF |
+| `turnstile_api_solver.py` | 11 KB | Solver otomatis challenge token Cloudflare Turnstile |
+| `cf_origin_finder.py` | 14 KB | Cari IP server asal (Direct-to-Origin) via DNS records & certs |
+| `cf_tcp_tuner.py` | 8.4 KB | Tuning parameter TCP stack (MSS, Window Size, SACK) |
+| `cf_tls_check.py` | 10 KB | Analisis fingerprint TLS (JA3/JA4) dan cipher suites |
+| `cf_session.py` | 9.2 KB | Session HTTP wrapper anti-bot dengan TLS impersonation |
+| `cf_cantarella_client.py` | 12 KB | Klien integrasi browser Camoufox/Cantarella anti-CDP |
+| `cf_cookie_inspector.py` | 7.8 KB | Validasi & monitoring cookie clearance (`cf_clearance`, `__cf_bm`) |
+| `cf_worker_proxy.js` | 6.5 KB | Edge reverse proxy script via Cloudflare Worker |
+| `cf_pipeline.js` | 11 KB | Automated headless browser pipeline dengan Ghost Cursor |
+
+### 🛡️ Web Security Audit & Hardening (`skills/web-security-audit/scripts/`)
+
+| Script | Ukuran | Fungsi |
+|--------|--------|--------|
+| `security_headers_audit.py` | 13 KB | Audit header keamanan HTTP live, scoring A+ s/d F, generator config |
+| `cors_audit.py` | 9.7 KB | Uji pantulan origin acak, null origin, dan kredensial wildcard |
+| `csrf_audit.py` | 14 KB | Audit form tanpa token @csrf, aksi GET berisiko, & SameSite cookies |
+| `secret_scanner.py` | 13 KB | Pindai kebocoran kunci API & string Shannon Entropy $H(X) \ge 4.2$ |
+| `static_code_audit.py` | 11 KB | Analisis statis codebase (.env, APP_DEBUG, raw output, fungsi eval) |
 
 ### 🎯 Dart/Flutter
 
@@ -408,11 +564,9 @@ Semua script berada di `skills/apk-reverse/scripts/` dan bisa dijalankan langsun
 | `apk_debloater.py` | 9.3 KB | Debloater terintegrasi |
 | `apk_mitm_patch.py` | 11 KB | MITM patcher terintegrasi |
 
----
+## 📚 66+ Dokumen Referensi Teknis
 
-## 📚 46 Dokumen Referensi Teknis
-
-Semua referensi berada di `skills/apk-reverse/references/` dan dimuat **on-demand** (hanya saat dibutuhkan).
+Semua referensi berada di dalam direktori `skills/<skill-name>/references/` dan dimuat **on-demand** (hanya saat dibutuhkan).
 
 ### 🎯 Inti Reverse Engineering
 
@@ -494,6 +648,41 @@ Semua referensi berada di `skills/apk-reverse/references/` dan dimuat **on-deman
 | `coverage-and-limits.md` | 16 KB | Claim ladder diterapkan ke skill itu sendiri |
 | `handoff-boundaries.md` | 5.7 KB | Di mana skill ini berakhir dan disiplin lain dimulai |
 | `panduan-cepat.md` | 9.5 KB | 🇮🇩 Panduan langkah demi langkah Bahasa Indonesia |
+
+### ☁️ Cloudflare & WAF Evasion (`skills/cf-bypass/references/`)
+
+| Dokumen | Ukuran | Topik |
+|---------|--------|-------|
+| `cloudflare-turnstile-internals.md` | 13 KB | Anatomi Turnstile, challenge token, cData telemetry |
+| `tls-fingerprinting-and-ja4-suite.md` | 15 KB | JA3, JA4, TLS cipher suite ordering, ALPN, GREASE |
+| `http2-and-quic-frame-fingerprinting.md` | 14 KB | Karakteristik frame HTTP/2, SETTINGS, window update, QUIC |
+| `v8-engine-and-browser-internals.md` | 16 KB | Evasion deteksi engine V8: prototypes, console, CDP markers |
+| `canvas-webgl-audiocontext-deep-dive.md` | 14 KB | Bypass sidik jari hardware (Canvas 2D, WebGL, AudioContext) |
+| `origin-discovery-playbook.md` | 13 KB | Playbook menemukan IP origin di balik proteksi Cloudflare |
+| `browser-automation-evasion-matrix.md` | 15 KB | Matriks stealth Playwright, Puppeteer, Camoufox, Rebrowser |
+| `proxy-networks-and-ip-reputation.md` | 12 KB | Strategi IP reputasi, residential proxy, ASN scoring |
+
+### 🌐 Web Reverse Engineering (`skills/web-reverse/references/`)
+
+| Dokumen | Ukuran | Topik |
+|---------|--------|-------|
+| `ast-deobfuscation-and-unravelling.md` | 14 KB | AST transform via Babel: constant folding, dead code removal |
+| `webpack-and-vite-bundle-internals.md` | 13 KB | Anatomi chunk loader Webpack 5, Rollup, Vite dynamic imports |
+| `api-signature-and-request-signing-playbook.md` | 12 KB | Reverse engineering request signing (HMAC, SHA256, timestamps) |
+| `wasm-reverse-engineering-and-memory-hooking.md` | 15 KB | Disassembly WebAssembly (WAT), linear memory buffer, imports hook |
+
+### 🛡️ Web Security Audit & Hardening (`skills/web-security-audit/references/`)
+
+| Dokumen | Ukuran | Topik |
+|---------|--------|-------|
+| `owasp-secure-headers-guide.md` | 5.0 KB | Panduan lengkap CSP, HSTS, X-Frame-Options, Permissions-Policy |
+| `cors-hardening-playbook.md` | 3.9 KB | Mitigasi Arbitrary Origin Reflection, null origin, & credentials |
+| `laravel-security-hardening-bible.md` | 11 KB | Panduan pengerasan Laravel 10/11 (.env, Session, CORS, Blade) |
+| `owasp-top-10-defensive-manual.md` | 7.3 KB | Analisis defensif dan mitigasi 10 risiko utama OWASP Top 10 |
+| `api-security-and-jwt-hardening.md` | 14 KB | Keamanan REST/GraphQL API, mitigasi serangan JWT, BOLA/IDOR |
+| `secure-file-upload-architecture.md` | 13 KB | Arsitektur upload aman, anti-RCE, polyglot stripping, isolasi server |
+| `content-security-policy-deep-dive.md` | 8.8 KB | CSP Level 3, cryptographic nonce, mode Report-Only & rollout |
+| `database-and-orm-hardening.md` | 8.3 KB | SQLi defense, PDO parameter binding, & mitigasi Mass Assignment |
 
 ---
 
@@ -668,7 +857,7 @@ apk-reverse/
 ├── 📄 README.md                 ← Dokumentasi ini
 ├── 📄 README.zh-CN.md           ← README 简体中文
 │
-├── 📁 skills/                   ← 5 Agent Skills
+├── 📁 skills/                   ← 8 Agent Skills
 │   │
 │   ├── 📁 apk-reverse/         ← ⭐ Skill utama reverse engineering
 │   │   ├── 📄 SKILL.md         ← Prosedur 4-gate + symptom index (48 KB)
@@ -698,15 +887,30 @@ apk-reverse/
 │   │   ├── 📁 scripts/         ← debloat_manifest.py, ad_stub_gen.py
 │   │   └── 📁 references/      ← ad-signature-catalogue.md, manifest-neutering.md
 │   │
-│   ├── 📁 apk-mitm-patcher/    ← Intersepsi HTTPS
+│   ├── 📁 apk-mitm-patcher/    ← Intersepsi HTTPS & NSC
 │   │   ├── 📄 SKILL.md
 │   │   ├── 📁 scripts/         ← mitm_patch.py, cert_inspect.py
 │   │   └── 📁 references/      ← network-security-config-deepdive.md
 │   │
-│   └── 📁 apk-repacker/        ← Repack & signing pipeline
-│       ├── 📄 SKILL.md
-│       ├── 📁 scripts/         ← repack_pipeline.py, apk_signer.py
-│       └── 📁 references/      ← apk-signing-schemes.md, zipalign-and-compression.md
+│   ├── 📁 apk-repacker/        ← Repack & signing pipeline
+│   │   ├── 📄 SKILL.md
+│   │   ├── 📁 scripts/         ← repack_pipeline.py, apk_signer.py
+│   │   └── 📁 references/      ← apk-signing-schemes.md, zipalign-and-compression.md
+│   │
+│   ├── 📁 cf-bypass/           ← ☁️ Bypass Cloudflare Turnstile, IUAM, & WAF
+│   │   ├── 📄 SKILL.md         ← Manual arsitektur 15 bab (35 KB)
+│   │   ├── 📁 scripts/         ← cf_detector.py, turnstile_api_solver.py, cf_origin_finder.py
+│   │   └── 📁 references/      ← 8 dokumen teknis TLS JA4, HTTP/2, Turnstile internals
+│   │
+│   ├── 📁 web-reverse/         ← 🌐 Reverse Engineering Web, Webpack & AST
+│   │   ├── 📄 SKILL.md         ← Manual deobfuscasi, anti-debug & bundle unpacking (34.6 KB)
+│   │   ├── 📁 scripts/         ← sourcemap_extractor.py, webpack_unpacker.py, js_deobfuscator.py
+│   │   └── 📁 references/      ← 4 dokumen AST, Webpack internals, WASM, & API signing
+│   │
+│   └── 📁 web-security-audit/  ← 🛡️ Audit OWASP Top 10, Security Headers & Secret Scanner
+│       ├── 📄 SKILL.md         ← Manual audit defensif 15 bab (30.2 KB)
+│       ├── 📁 scripts/         ← security_headers_audit.py, cors_audit.py, secret_scanner.py
+│       └── 📁 references/      ← 8 dokumen OWASP, CSP Level 3, Laravel & Database hardening
 │
 ├── 📁 tests/                    ← Unit, integration, CLI tests
 │   ├── 📄 README.md            ← Penjelasan split testing
@@ -807,15 +1011,19 @@ Regression matrix untuk target nyata tersedia di `tests/benchmark.md`.
 
 | Metrik | Jumlah |
 |--------|--------|
-| Total script | **65+** |
-| Dokumen referensi | **46** |
-| Agent skills | **5** |
+| Total script | **88+** |
+| Dokumen referensi | **66+** |
+| Agent skills | **8** |
+| Cakupan Keamanan | **Android APK, Cloudflare WAF, Web Reverse, Web Security Audit** |
 | Unit tests | **7** |
 | Integration tests | **3** |
 | CLI tests | **2** |
 | Maintenance tools | **6** |
 | Bahasa README | **3** (ID, ZH-CN, EN) |
-| Ukuran SKILL.md | **48 KB** |
+| Ukuran SKILL.md (apk-reverse) | **48 KB** |
+| Ukuran SKILL.md (cf-bypass) | **35 KB** |
+| Ukuran SKILL.md (web-reverse) | **34.6 KB** |
+| Ukuran SKILL.md (web-security-audit) | **30.2 KB** |
 | Ukuran pitfalls.md | **63 KB** |
 | Ukuran repack.py | **65 KB** |
 | Ukuran vmp_diff_harness.py | **73 KB** |
