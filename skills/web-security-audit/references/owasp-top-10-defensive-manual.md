@@ -39,8 +39,15 @@ Terjadi saat data sensitif (password, nomor rekening, token autentikasi) tidak d
 
 ### Aturan Mitigasi:
 1. **Hashing Password:** Wajib menggunakan algoritma *memory-hard* yang adaptif terhadap hardware GPU: **Argon2id** atau **Bcrypt** (cost factor minimal 12). Dilarang keras menggunakan MD5, SHA-1, atau SHA-256 untuk password.
-2. **Enkripsi Data At-Rest:** Gunakan kunci simetris standar industri seperti **AES-256-GCM** atau **AES-256-CBC** melalui `Crypt::encryptString()` pada Laravel.
-3. **Data In-Transit:** Terapkan HTTPS dengan TLS 1.3 dan aktifkan header `Strict-Transport-Security: max-age=31536000; includeSubDomains`.
+2. **Enkripsi Data At-Rest:** Gunakan kunci simetris standar industri seperti **AES-256-GCM** atau **AES-256-CBC** melalui `Crypt::encryptString()` pada Laravel. Dilarang keras menggunakan mode **ECB** (`AES-ECB`) karena pola plaintext tetap tercermin pada ciphertext.
+3. **Inisialisasi IV & Nonce Unik:** Selalu gunakan Initialization Vector (IV) yang dihasilkan secara acak kriptografis (`random_bytes(16)`) untuk setiap operasi enkripsi. Menggunakan IV statis/hardcoded menghancurkan keamanan semantik AES-CBC dan mengekspos Galois key pada AES-GCM.
+4. **Perbandingan Waktu Konstan (Timing Attacks):** Saat memverifikasi hash token, password hash, atau tanda tangan HMAC, gunakan perbandingan *constant-time*:
+   * PHP: `hash_equals($knownString, $userString)`
+   * Node.js: `crypto.timingSafeEqual(bufA, bufB)`
+   * Python: `hmac.compare_digest(a, b)`
+5. **Pemindaian Rahasia Hardcoded:** Gunakan `scripts/secret_scanner.py` untuk mendeteksi kunci API, private key, dan secret token dengan Shannon Entropy tinggi yang bocor di repository.
+6. **Data In-Transit:** Terapkan HTTPS dengan TLS 1.3 dan aktifkan header `Strict-Transport-Security: max-age=31536000; includeSubDomains`.
+
 
 ---
 

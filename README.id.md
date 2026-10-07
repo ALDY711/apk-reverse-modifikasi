@@ -93,14 +93,14 @@ Salin skills/apk-reverse/ ke ~/.gemini/config/skills/apk-reverse/
 | Kategori | Kemampuan |
 |---|---|
 | 🔍 **Rekon APK** | Identifikasi packer, SDK, lokasi kode, pemeriksaan tamper |
-| 🔧 **Patching** | Byte-level DEX edit, string patch, native .so patch, method rewrite |
-| 📦 **Repack** | Align, sign ulang, handle split APK, preservasi metadata ZIP |
-| 🛡️ **Keamanan Android** | Scan kebocoran data, TLS/cert analysis, signature verification |
-| 🔬 **Dinamis** | Frida probe/hook/RPC/Stalker, memory DEX dump, cold-start analysis |
+| 🔧 **Patching & Modding** | Byte-level DEX edit, string patch, native .so patch, Universal APK Modder (branding/watermark), & WhatsApp modding (Delta/GB/anti-revoke) |
+| 📦 **Repack** | Align, sign ulang (v1/v2/v3), handle split APK, preservasi metadata ZIP, & troubleshooting error instalasi |
+| 🛡️ **Keamanan Android** | Scan kebocoran data, TLS/cert analysis, signature verification, & ekstraksi kunci kriptografi |
+| 🔬 **Dinamis** | Frida probe/hook/RPC/Stalker, memory DEX dump, cold-start analysis, & dynamic crypto snooping |
 | 📱 **Device** | Preflight check, install & test, screenshot otomatis |
-| 🌐 **Web Reverse** | Ekstraksi Source Map (.js.map), deobfuskasi JS/AST, netralkan anti-debug, tracing API |
+| 🌐 **Web Reverse** | Ekstraksi Source Map (.js.map), deobfuskasi JS/AST, netralkan anti-debug, tracing API, alur Login/Register, enkripsi client (RSA/CryptoJS), & TLS replay |
 | ☁️ **Bypass Cloudflare** | Solved Turnstile tokens, evasive JA4 TLS spoofing, IUAM, Bot Fight Mode & Direct-to-Origin |
-| 🛡️ **Security Web (OWASP)** | Audit HTTP Security Headers (Grade A+ - F), mitigasi CORS & CSRF, pemindai secret Shannon Entropy, dan hardening Laravel/Nginx |
+| 🛡️ **Security Web (OWASP)** | Audit HTTP Security Headers (Grade A+ - F), mitigasi CORS/CSRF, audit SQL Injection Login/Register, evaluasi hashing password, IDOR/BOLA detection, & Rate Limiting |
 | 📊 **Laporan** | Generate laporan MD/HTML/JSON dengan penilaian risiko terpadu |
 
 ---
@@ -219,6 +219,10 @@ python apk_cli.py frida-gen --template crypto-monitor --out crypto.js
 
 # Native JNI Symbol Resolver & Hook Generator
 python apk_cli.py jni --so libnative.so --generate-hooks --out hook.js
+
+# Dekripsi & Decoding (Blob Config & Protobuf Wire)
+python apk_cli.py decode blob --file config.bin --out clean.json
+python apk_cli.py decode proto --hex "08 96 01 12 07 74 65 73 74 69 6e 67"
 
 # Web Reverse
 python apk_cli.py web sourcemap --url https://target.com/app.min.js --out-dir ./src

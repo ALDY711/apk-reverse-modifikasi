@@ -245,7 +245,34 @@ The rotation search is cheap — a few tens of thousands of candidates resolve i
 — so there is no reason to guess. **Distinguish framing from real encryption before spending time
 on a key:** a framed blob becomes structured the moment you remove the framing, whereas a keyed blob
 stays random-looking. If it stays random, treat it as opaque and move to the code path that consumes
-it.
+it (`references/cryptographic-analysis-and-decryption.md`).
+
+## Encrypted Local Stores (EncryptedSharedPreferences, SQLCipher, Encrypted MMKV)
+
+When local data is protected by real cryptographic ciphers rather than framing, static editing on disk is blocked. Triage them at the runtime boundary:
+
+### 1. EncryptedSharedPreferences (Jetpack Security / Tink)
+* **What you observe:** XML keys and values in `shared_prefs/*.xml` are base64-encoded strings looking like random bytes.
+* **Mechanism:** Uses AES-256 SIV for key names and AES-256 GCM for values. The master key lives in `AndroidKeyStore` (`_androidx_security_master_key_`).
+* **Decryption Route:** Do not attempt to export the master key. Hook `SharedPreferences.getString` or `SharedPreferences.getAll` using Frida to dump all plaintext keys and values as the app reads them, or hook `Cipher.doFinal` (`references/cryptographic-analysis-and-decryption.md`).
+
+### 2. SQLCipher (Encrypted SQLite)
+* **What you observe:** Database files under `databases/*.db` fail with `file is not a database` when queried with `sqlite3`.
+* **Mechanism:** Page-level AES-256 encryption with a 16-byte salt at offset 0 of the file.
+* **Extraction Route:**
+  1. Hook `net.sqlcipher.database.SQLiteDatabase.openOrCreateDatabase(..., String password, ...)` using Frida to log the raw encryption key or passphrase.
+  2. Once the key is obtained, dump an unencrypted copy of the database:
+     ```sql
+     ATTACH DATABASE '/data/data/<pkg>/databases/plain.db' AS plain KEY '';
+     SELECT sqlcipher_export('plain');
+     DETACH DATABASE plain;
+     ```
+  3. The resulting `plain.db` can be inspected with standard `sqlite3`.
+
+### 3. Encrypted MMKV
+* **What you observe:** Files in `files/mmkv/` have corrupted headers and fail the standard MMKV parser.
+* **Mechanism:** AES-128 CFB encryption using a dynamic cryptKey.
+* **Extraction Route:** Hook `com.tencent.mmkv.MMKV.mmkvWithID(String mmapID, int mode, String cryptKey, ...)` to log the secret `cryptKey`.
 
 ## Cautions
 

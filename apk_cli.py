@@ -449,6 +449,46 @@ def cmd_jni(args):
     return _run_script("jni_export_resolve.py", extra)
 
 
+def cmd_decode(args):
+    """Decode opaque payloads, cached config blobs, dan raw protobuf."""
+    subcmd = args.decode_type
+    if subcmd == "blob":
+        extra = []
+        if getattr(args, "file", None):
+            extra.extend(["--file", args.file])
+        if getattr(args, "prefs_xml", None):
+            extra.extend(["--prefs-xml", args.prefs_xml])
+        if getattr(args, "name", None):
+            extra.extend(["--name", args.name])
+        if getattr(args, "out", None):
+            extra.extend(["--out", args.out])
+        if getattr(args, "max_skip", None) is not None:
+            extra.extend(["--max-skip", str(args.max_skip)])
+        if getattr(args, "encode", False):
+            extra.append("--encode")
+        if getattr(args, "outer", None):
+            extra.extend(["--outer", args.outer])
+        if getattr(args, "inner", None):
+            extra.extend(["--inner", args.inner])
+        if getattr(args, "cut", None) is not None:
+            extra.extend(["--cut", str(args.cut)])
+        return _run_script("blob_decode.py", extra)
+    elif subcmd == "proto":
+        extra = []
+        if getattr(args, "hex", None):
+            extra.extend(["--hex", args.hex])
+        if getattr(args, "file", None):
+            extra.extend(["--file", args.file])
+        if getattr(args, "split", None):
+            extra.extend(["--split", args.split])
+        if getattr(args, "reencode", False):
+            extra.append("--reencode")
+        return _run_script("protobuf_decode_raw.py", extra)
+    else:
+        print(f"[ERROR] Subcommand decode tidak dikenal: {subcmd}")
+        sys.exit(1)
+
+
 def cmd_report(args):
     """Generate laporan analisis."""
     report_path = os.path.join(HERE, "skills", "apk-reverse", "scripts", "report_generator.py")
@@ -815,6 +855,29 @@ def build_parser():
     p_jni.add_argument("--out", "-o", help="File output skrip Frida")
     p_jni.add_argument("--json", action="store_true", help="Output dalam format JSON")
     p_jni.set_defaults(func=cmd_jni)
+
+    # ── decode ─────────────────────────────────────────────────────────
+    p_dec = sub.add_parser("decode", help="Decode opaque blobs, cached configs, dan protobuf")
+    p_dec_sub = p_dec.add_subparsers(dest="decode_type", help="Tipe decoder")
+
+    p_blob = p_dec_sub.add_parser("blob", help="Decode opaque config blobs (rotasi byte + kompresi)")
+    p_blob.add_argument("--file", help="File berisi blob target")
+    p_blob.add_argument("--prefs-xml", help="Path ke SharedPreferences XML")
+    p_blob.add_argument("--name", help="Nama key dalam XML")
+    p_blob.add_argument("--out", "-o", help="File output hasil dekode")
+    p_blob.add_argument("--max-skip", type=int, help="Maksimum byte header yang di-skip")
+    p_blob.add_argument("--encode", action="store_true", help="Re-encode payload yang telah diedit")
+    p_blob.add_argument("--outer", choices=["base64", "base64url", "hex"], help="Outer encoding")
+    p_blob.add_argument("--inner", choices=["raw", "zlib", "gzip"], help="Inner compression")
+    p_blob.add_argument("--cut", type=int, help="Panjang cyclic cut")
+
+    p_proto = p_dec_sub.add_parser("proto", help="Decode binary protobuf tanpa file schema .proto")
+    p_proto.add_argument("--hex", help="Hex string dari payload protobuf")
+    p_proto.add_argument("--file", help="File binary protobuf")
+    p_proto.add_argument("--split", choices=["varint-length"], help="Framing split")
+    p_proto.add_argument("--reencode", action="store_true", help="Verifikasi round-trip re-encode")
+
+    p_dec.set_defaults(func=cmd_decode)
 
     # ── report ─────────────────────────────────────────────────────────
     p_report = sub.add_parser("report", help="Generate laporan analisis")

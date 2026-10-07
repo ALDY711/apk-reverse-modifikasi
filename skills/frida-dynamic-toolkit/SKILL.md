@@ -20,12 +20,12 @@ Toolkit komprehensif untuk instrumentasi dinamis aplikasi Android menggunakan Fr
    - Jika aplikasi menutup seketika saat mendeteksi root/debugger, gunakan `scripts/generate_bypass.py` dengan opsi `--type root`.
    - Pelajari detail teknis di `references/ssl-pinning-matrix.md` dan `references/root-detection-matrix.md`.
 
-2. **Ekstraksi Kunci Kriptografi & Token**:
-   - Untuk memantau kunci enkripsi AES, inisialisasi IV, atau hashing HMAC yang dibuat secara dinamis, jalankan:
+2. **Ekstraksi Kunci Kriptografi & Dekripsi Runtime**:
+   - Untuk memantau kunci enkripsi AES, inisialisasi IV, hashing HMAC, atau mendekripsi payload runtime, gunakan `scripts/crypto_monitor.py`:
      ```bash
      python skills/frida-dynamic-toolkit/scripts/crypto_monitor.py --out crypto_trace.js
      ```
-   - Injeksikan ke aplikasi untuk melihat plaintext dan secret keys secara real-time.
+   - Pelajari teknik ekstraksi kunci, penanganan AndroidKeyStore, dan hook native BoringSSL di `references/cryptographic-interception-and-key-extraction.md`.
 
 3. **Intersepsi Layer Native & JNI**:
    - Untuk memantau parameter yang dikirim ke shared library `.so`, gunakan:

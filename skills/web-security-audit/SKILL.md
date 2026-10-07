@@ -11,6 +11,11 @@ metadata:
     - "scripts/static_code_audit.py"
     - "scripts/secret_scanner.py"
     - "scripts/csrf_audit.py"
+    - "scripts/ssrf_validator.py"
+    - "scripts/subdomain_takeover_audit.py"
+    - "scripts/sql_auth_auditor.py"
+    - "scripts/idor_bola_auditor.py"
+    - "scripts/rate_limit_audit.py"
   reference_manuals:
     - "references/owasp-secure-headers-guide.md"
     - "references/cors-hardening-playbook.md"
@@ -20,6 +25,11 @@ metadata:
     - "references/secure-file-upload-architecture.md"
     - "references/content-security-policy-deep-dive.md"
     - "references/database-and-orm-hardening.md"
+    - "references/ssrf-and-cloud-metadata-defense.md"
+    - "references/subdomain-takeover-and-dns-security.md"
+    - "references/sql-injection-and-auth-hardening-bible.md"
+    - "references/idor-and-access-control-hardening-guide.md"
+    - "references/rate-limiting-and-anti-automation-bible.md"
   standards_referenced:
     - "OWASP Secure Headers Project"
     - "OWASP Top 10 Web Application Security Risks (2021)"
@@ -51,14 +61,16 @@ Skill ini berfokus pada **audit pertahanan preventif (defensive engineering), ke
 9. [Arsitektur File Upload Aman (Anti-RCE, Anti-Polyglot & SVG Sanitization)](#9-arsitektur-file-upload-aman-anti-rce-anti-polyglot--svg-sanitization)
 10. [Database & ORM Hardening (SQLi Defense & Mass Assignment Prevention)](#10-database--orm-hardening-sqli-defense--mass-assignment-prevention)
 11. [Keamanan API & JWT Hardening (OWASP API Top 10 & BOLA Defense)](#11-keamanan-api--jwt-hardening-owasp-api-top-10--bola-defense)
-12. [Resep Pengerasan Per Framework & Web Server](#12-resep-pengerasan-per-framework--web-server)
+12. [Server-Side Request Forgery (SSRF) & Cloud Metadata Defense](#12-server-side-request-forgery-ssrf--cloud-metadata-defense)
+13. [Subdomain Takeover, DNS Security & Surface Hygiene](#13-subdomain-takeover-dns-security--surface-hygiene)
+14. [Resep Pengerasan Per Framework & Web Server](#14-resep-pengerasan-per-framework--web-server)
     - Laravel 10 / 11 (SecurityHeadersMiddleware, CORS, Session, Blade)
     - Node.js / Express (Helmet, CORS, Rate Limit)
     - Nginx Server Block (Header Hardening, Upload Isolation, Dotfile Deny)
     - Apache (.htaccess / VirtualHost Hardening)
-13. [Katalog Tools & Panduan Eksekusi Skrip CLI](#13-katalog-tools--panduan-eksekusi-skrip-cli)
-14. [Matriks Diagnostik Kerentanan & Remediasi Cepat](#14-matriks-diagnostik-kerentanan--remediasi-cepat)
-15. [Indeks Dokumen Referensi Teknis](#15-indeks-dokumen-referensi-teknis)
+15. [Katalog Tools & Panduan Eksekusi Skrip CLI](#15-katalog-tools--panduan-eksekusi-skrip-cli)
+16. [Matriks Diagnostik Kerentanan & Remediasi Cepat](#16-matriks-diagnostik-kerentanan--remediasi-cepat)
+17. [Indeks Dokumen Referensi Teknis](#17-indeks-dokumen-referensi-teknis)
 
 ---
 
@@ -340,7 +352,32 @@ $users = DB::table('users')->whereRaw("username = ?", [$username])->get();
 
 ---
 
-## 12. RESEP PENGERASAN PER FRAMEWORK & WEB SERVER
+## 12. SERVER-SIDE REQUEST FORGERY (SSRF) & CLOUD METADATA DEFENSE
+
+Kerentanan SSRF (OWASP A10:2021) terjadi saat aplikasi mengambil remote URL (webhook, link preview, PDF renderer, avatar import) tanpa validasi resolusi IP:
+- **Cloud Metadata Targets:** Perlindungan endpoint `169.254.169.254` (AWS IMDSv1/v2, Azure, DigitalOcean) dan `metadata.google.internal` (GCP) dari pencurian IAM token/kredensial.
+- **Bypass Obfuskasi IP:** Penanganan representasi Dword (`http://2130706433/`), Octal (`0177.0.0.1`), Hex (`0x7f000001`), dan IPv4-mapped IPv6 (`[::ffff:127.0.0.1]`).
+- **Mitigasi DNS Rebinding (TOCTOU):** Resolusi DNS mandiri sebelum koneksi TCP, validasi terhadap CIDR privat (RFC 1918, RFC 3927), dan DNS pinning.
+- **Wajibkan AWS IMDSv2:** Terapkan opsi `http-tokens required` pada seluruh instance EC2.
+
+> **Panduan Lengkap:** Pelajari katalog metadata, vektor bypass, dan safe client pattern di [`references/ssrf-and-cloud-metadata-defense.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/ssrf-and-cloud-metadata-defense.md).
+> Gunakan `scripts/ssrf_validator.py` untuk menguji URL terhadap kerentanan SSRF dan men-generate safe client.
+
+---
+
+## 13. SUBDOMAIN TAKEOVER, DNS SECURITY & SURFACE HYGIENE
+
+Subdomain takeover (OWASP A05:2021) terjadi saat rekaman CNAME mengarah ke sumber daya cloud pihak ketiga yang telah dihapus (*Dangling CNAME*):
+- **Sidik Jari Cloud:** Deteksi respons error dari AWS S3 (`NoSuchBucket`), GitHub Pages (`There isn't a GitHub Pages site here`), Heroku (`No such app`), Azure, Zendesk, Fastly, dll.
+- **Standarisasi Rekaman Email & TLS:** Penerapan DMARC dengan kebijakan ketat (`p=reject`), SPF dengan hard-fail (`-all`), dan CAA records untuk mencegah penerbitan sertifikat liar.
+- **Dekomisioning Aman:** Otomasi pembersihan CNAME sebelum menghapus cloud bucket/instances.
+
+> **Panduan Lengkap:** Pelajari katalog fingerprint layanan cloud dan remediasi DNS di [`references/subdomain-takeover-and-dns-security.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/subdomain-takeover-and-dns-security.md).
+> Gunakan `scripts/subdomain_takeover_audit.py` untuk memindai daftar subdomain organisasi secara otomatis.
+
+---
+
+## 14. RESEP PENGERASAN PER FRAMEWORK & WEB SERVER
 
 ### A. Konfigurasi Nginx (`/etc/nginx/sites-available/default`)
 
@@ -430,17 +467,22 @@ class SecurityHeadersMiddleware
 
 ---
 
-## 13. KATALOG TOOLS & PANDUAN EKSEKUSI SKRIP CLI
+## 15. KATALOG TOOLS & PANDUAN EKSEKUSI SKRIP CLI
 
 Semua tool audit terletak di dalam subdirektori `scripts/`:
 
 | Skrip | Fungsi & Cakupan Pemeriksaan |
 |---|---|
-| [`security_headers_audit.py`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/scripts/security_headers_audit.py) | Memeriksa seluruh response headers, cookie flags, kebocoran versi server, dan men-generate konfigurasi Nginx/Apache/Laravel otomatis. |
-| [`cors_audit.py`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/scripts/cors_audit.py) | Menguji pantulan origin acak, null origin, wildcard credentials, dan preflight OPTIONS pada endpoint API. |
-| [`static_code_audit.py`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/scripts/static_code_audit.py) | Memindai source code lokal (.env, Blade, PHP, JS) untuk debug mode aktif, fungsi berbahaya (`eval`), dan form tanpa CSRF. |
-| [`secret_scanner.py`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/scripts/secret_scanner.py) | Memindai kebocoran kunci API, private keys, database URI, dan string entropi tinggi (Shannon Entropy) pada repository. |
-| [`csrf_audit.py`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/scripts/csrf_audit.py) | Mengaudit form POST yang kehilangan token CSRF, link GET state-changing berbahaya, dan SameSite cookie flags. |
+| [`security_headers_audit.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/security_headers_audit.py) | Memeriksa seluruh response headers, cookie flags, kebocoran versi server, dan men-generate konfigurasi Nginx/Apache/Laravel otomatis. |
+| [`cors_audit.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/cors_audit.py) | Menguji pantulan origin acak, null origin, wildcard credentials, dan preflight OPTIONS pada endpoint API. |
+| [`static_code_audit.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/static_code_audit.py) | Memindai source code lokal (.env, Blade, PHP, JS) untuk debug mode aktif, fungsi berbahaya (`eval`), dan form tanpa CSRF. |
+| [`secret_scanner.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/secret_scanner.py) | Memindai kebocoran kunci API, private keys, database URI, dan string entropi tinggi (Shannon Entropy) pada repository. |
+| [`csrf_audit.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/csrf_audit.py) | Mengaudit form POST yang kehilangan token CSRF, link GET state-changing berbahaya, dan SameSite cookie flags. |
+| [`ssrf_validator.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/ssrf_validator.py) | Memvalidasi URL & IP terhadap rentang privat (RFC 1918), cloud metadata (169.254.169.254), obfuskasi IP, dan generate safe client. |
+| [`subdomain_takeover_audit.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/subdomain_takeover_audit.py) | Memindai rekaman CNAME menggantung (Dangling CNAME) pada layanan cloud (AWS S3, GitHub, Heroku, Azure, Cloudflare) dari takeover. |
+| [`sql_auth_auditor.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/sql_auth_auditor.py) | Memindai backend controller (PHP, Node.js, Python) terhadap SQL Injection pada alur Login/Register, mengevaluasi fungsi hashing password (Argon2id/Bcrypt vs MD5/SHA1), dan menghasilkan prepared statements. |
+| [`idor_bola_auditor.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/idor_bola_auditor.py) | Mengaudit controller dan API endpoint terhadap celah Insecure Direct Object Reference (IDOR) dan Broken Object Level Authorization (BOLA), mendeteksi query tanpa isolasi tenant/user. |
+| [`rate_limit_audit.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/scripts/rate_limit_audit.py) | Memindai rute dan controller sensitif (login, register, forgot-password, OTP, payment) terhadap ketiadaan pembatas laju (Rate Limiting/Throttling) dan anti-automation. |
 
 ### Contoh Pemanggilan CLI:
 ```bash
@@ -458,11 +500,29 @@ python scripts/secret_scanner.py --path "C:/path/to/project" --json secrets_repo
 
 # 5. Pindai Kerentanan Statis Codebase
 python scripts/static_code_audit.py --path "C:/path/to/project" --severity HIGH
+
+# 6. Validasi URL terhadap Celah SSRF & Cloud Metadata
+python scripts/ssrf_validator.py --url "http://169.254.169.254/latest/meta-data/"
+
+# 7. Audit Subdomain Takeover & Dangling DNS
+python scripts/subdomain_takeover_audit.py --domain docs.example.com
+
+# 8. Audit SQL Injection & Password Hashing pada Modul Auth/Database
+python scripts/sql_auth_auditor.py audit "C:/path/to/project/app"
+
+# 9. Audit IDOR / BOLA pada Endpoint Controller
+python scripts/idor_bola_auditor.py audit "C:/path/to/project/app/Http/Controllers"
+
+# 10. Audit Rate Limiting & Proteksi Anti-Automation Rute
+python scripts/rate_limit_audit.py audit "C:/path/to/project/routes"
+
+# 11. Tampilkan Resep Kode Prepared Statements & Hashing Aman
+python scripts/sql_auth_auditor.py remediate
 ```
 
 ---
 
-## 14. MATRIKS DIAGNOSTIK KERENTANAN & REMEDIASI CEPAT
+## 16. MATRIKS DIAGNOSTIK KERENTANAN & REMEDIASI CEPAT
 
 | Temuan Audit | Kategori Risiko | Dampak Eksploitasi | Resep Remediasi Langsung |
 |---|---|---|---|
@@ -478,18 +538,25 @@ python scripts/static_code_audit.py --path "C:/path/to/project" --severity HIGH
 | **SQLi pada Raw Query ORM** | CRITICAL | Penyerang dapat membaca, mengubah, atau menghapus seluruh database. | Gunakan prepared statement parameter binding `whereRaw('col = ?', [$val])`. |
 | **Unrestricted File Upload** | CRITICAL | Unggah file `.php` menghasilkan Remote Code Execution (RCE). | Whitelist ekstensi, verifikasi magic bytes, re-encode gambar via GD, dan isolasi folder upload. |
 | **Secret Bocor di Repository** | CRITICAL | Akun cloud (AWS, Stripe, Database) dapat dibobol dan disalahgunakan. | Revoke/rotasi kunci seketika, pindahkan ke `.env`, dan bersihkan riwayat Git. |
+| **SSRF ke Cloud Metadata** | CRITICAL | Penyerang dapat mengekstrak kredensial IAM role atau private token dari VM cloud. | Gunakan pre-flight DNS check, blokir CIDR privat/link-local, dan wajibkan AWS IMDSv2. |
+| **Dangling CNAME (Subdomain Takeover)** | HIGH | Penyerang dapat mengklaim bucket/app dan membajak subdomain resmi organisasi. | Bersihkan rekaman CNAME di DNS atau verifikasi kepemilikan domain di penyedia cloud. |
 
 ---
 
-## 15. INDEKS DOKUMEN REFERENSI TEKNIS
+## 17. INDEKS DOKUMEN REFERENSI TEKNIS
 
 Untuk petunjuk arsitektur dan panduan pengerasan mendalam, pelajari manual teknis berikut di direktori `references/`:
 
-1. [`owasp-secure-headers-guide.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/owasp-secure-headers-guide.md) — Panduan mendalam konfigurasi HTTP Security Headers dan mitigasi serangan berbasis browser.
-2. [`cors-hardening-playbook.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/cors-hardening-playbook.md) — Buku panduan konfigurasi CORS yang aman dan teknik pencegahan Arbitrary Origin Reflection.
-3. [`laravel-security-hardening-bible.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/laravel-security-hardening-bible.md) — Manual pengerasan komprehensif khusus untuk arsitektur Laravel 10 dan 11.
-4. [`owasp-top-10-defensive-manual.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/owasp-top-10-defensive-manual.md) — Analisis defensif dan strategi mitigasi untuk 10 risiko keamanan web terbesar versi OWASP.
-5. [`api-security-and-jwt-hardening.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/api-security-and-jwt-hardening.md) — Panduan pengamanan REST/GraphQL API, arsitektur token JWT yang aman, mitigasi BOLA/IDOR, dan rate limiting.
-6. [`secure-file-upload-architecture.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/secure-file-upload-architecture.md) — Arsitektur sistem file upload defensif, pencegahan RCE web shell, pemusnahan polyglot, dan isolasi web server.
-7. [`content-security-policy-deep-dive.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/content-security-policy-deep-dive.md) — Panduan lengkap CSP Level 3, implementasi nonce kriptografis, mode Report-Only, dan eliminasi risiko XSS.
-8. [`database-and-orm-hardening.md`](file:///c:/apk-reverse/apk/.agents/skills/web-security-audit/references/database-and-orm-hardening.md) — Panduan pengerasan database server, pencegahan SQL Injection pada ORM Eloquent/PDO, dan eliminasi celah Mass Assignment.
+1. [`owasp-secure-headers-guide.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/owasp-secure-headers-guide.md) — Panduan mendalam konfigurasi HTTP Security Headers dan mitigasi serangan berbasis browser.
+2. [`cors-hardening-playbook.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/cors-hardening-playbook.md) — Buku panduan konfigurasi CORS yang aman dan teknik pencegahan Arbitrary Origin Reflection.
+3. [`laravel-security-hardening-bible.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/laravel-security-hardening-bible.md) — Manual pengerasan komprehensif khusus untuk arsitektur Laravel 10 dan 11.
+4. [`owasp-top-10-defensive-manual.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/owasp-top-10-defensive-manual.md) — Analisis defensif dan strategi mitigasi untuk 10 risiko keamanan web terbesar versi OWASP.
+5. [`api-security-and-jwt-hardening.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/api-security-and-jwt-hardening.md) — Panduan pengamanan REST/GraphQL API, arsitektur token JWT yang aman, mitigasi BOLA/IDOR, dan rate limiting.
+6. [`secure-file-upload-architecture.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/secure-file-upload-architecture.md) — Arsitektur sistem file upload defensif, pencegahan RCE web shell, pemusnahan polyglot, dan isolasi web server.
+7. [`content-security-policy-deep-dive.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/content-security-policy-deep-dive.md) — Panduan lengkap CSP Level 3, implementasi nonce kriptografis, mode Report-Only, dan eliminasi risiko XSS.
+8. [`database-and-orm-hardening.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/database-and-orm-hardening.md) — Panduan pengerasan database server, pencegahan SQL Injection pada ORM Eloquent/PDO, dan eliminasi celah Mass Assignment.
+9. [`ssrf-and-cloud-metadata-defense.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/ssrf-and-cloud-metadata-defense.md) — Panduan komprehensif mitigasi SSRF, proteksi AWS/GCP/Azure metadata, dan pencegahan DNS Rebinding.
+10. [`subdomain-takeover-and-dns-security.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/subdomain-takeover-and-dns-security.md) — Panduan audit rekaman Dangling CNAME, pencegahan Subdomain Takeover, serta standarisasi SPF, DKIM, DMARC, dan CAA.
+11. [`sql-injection-and-auth-hardening-bible.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/sql-injection-and-auth-hardening-bible.md) — Panduan teknis pencegahan SQL Injection pada alur Login & Registrasi, audit fungsi hashing password (Argon2id/Bcrypt), dan arsitektur database defensif.
+12. [`idor-and-access-control-hardening-guide.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/idor-and-access-control-hardening-guide.md) — Panduan komprehensif pengerasan kendali akses, pencegahan Insecure Direct Object Reference (IDOR), dan eliminasi BOLA pada arsitektur REST API.
+13. [`rate-limiting-and-anti-automation-bible.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-security-audit/references/rate-limiting-and-anti-automation-bible.md) — Buku panduan pertahanan anti-automasi, arsitektur Rate Limiting bertingkat (Redis Sliding Window & Nginx), mitigasi credential stuffing, serta penanggulangan SMS toll fraud.

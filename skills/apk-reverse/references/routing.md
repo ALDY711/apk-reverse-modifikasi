@@ -73,14 +73,16 @@ reference file is not named here, or when a script is not named here.
 | A captured body decodes to nothing readable, or you cannot tell whether a length-delimited field is a string, a nested message or a packed array | `protocol-reverse.md`. Protobuf on the wire (measured) — run `scripts/protobuf_decode_raw.py`; the candidate list and its `tie:` lines are the answer |
 | Method bodies are present but decode as **private opcodes**, and you need the mapping rather than an explanation of why VMP is hard | `vmp-differential-analysis.md`, then `advanced-unpacking.md` for the shape diagnosis |
 | A store build arrives as `base.apk` + `split_config.*.apk`, or a rebuilt build is refused **as a set** although every file verifies on its own | `split-apk.md` — one keystore across every member for `pm install-multiple`, and check that a merge is legal before trusting a merged single APK |
+| A captured payload, local store, config or communication is encrypted, or you need to recover cryptographic keys (AES/RSA/HMAC) | references/cryptographic-analysis-and-decryption.md — JCA interception, Keystore unwrap, native crypto constants, and blob decoding |
 
-_54 row(s) below the header._
+_55 row(s) below the header._
 
 ## Reference index (no longer inline in `SKILL.md`)
 
 
 | File | Load when |
 |---|---|
+| `references/cryptographic-analysis-and-decryption.md` | A captured payload, local store, config or communication is encrypted, or you need to recover cryptographic keys (AES/RSA/HMAC) or decrypt payloads in Android apps |
 | `references/recon.md` | Starting any new sample; identifying packer, SDKs, code location, ABI |
 | `references/server-config-and-updates.md` | **The launch screen, a popup or the tab set is server-sent**; no ad SDK was found; a removed promo came back; anything controlled by a `*Config`/`*Popup` DTO with an `enabled` flag |
 | `references/byte-level-patching.md` | You want to change behaviour by editing a few bytes rather than rebuilding a method — equal-length patches, locating an instruction's exact offset, dex header integrity fields, branch polarity, verifier legality |
@@ -129,8 +131,12 @@ _54 row(s) below the header._
 | `references/split-apk.md` | The target is a **split APK / App Bundle set** (`base.apk` + `split_config.*.apk`), or `pm path <PKG>` returned several files: reading a set, merge versus unified re-signing, and the install refusal each mistake produces |
 | `references/panduan-cepat.md` | Panduan cepat langkah-demi-langkah Bahasa Indonesia untuk alur kerja skill |
 | `references/web-reverse.md` | Web reverse engineering: Source Maps (.js.map) extraction, JS deobfuscation, and API dynamic tokens/signatures |
+| `references/whatsapp-mod-architecture-and-bot-integration.md` | WhatsApp mod architecture (YoWA/DeltaLabs/Fouad), AutoMessageSQLite schema, anti-ban countermeasures, and in-app vs Baileys bot integration |
+| `references/universal-apk-modding-and-patching-guide.md` | Universal APK reverse engineering, framework detection (Unity, Flutter, React Native), ad debloating, and V1/V2/V3 signing playbook |
+| `references/app-cloning-and-repackaging.md` | App duplication and cloning playbook: manifest package rename, ContentProvider authorities isolation, and dual-app signing |
+| `references/license-bypass-and-feature-unlocking.md` | In-App purchase and subscription reverse engineering: Google Play Billing v3-v7, RevenueCat, and smali feature gate bypass |
 
-_45 row(s) below the header._
+_49 row(s) below the header._
 
 ## Script index (no longer inline in `SKILL.md`)
 
@@ -202,5 +208,8 @@ _45 row(s) below the header._
 | `scripts/frida_hook_gen.py` | Generate battle-tested Frida scripts for universal SSL unpinning, root detection bypass, runtime crypto API monitoring, and method tracing |
 | `scripts/jni_export_resolve.py` | Static ELF analysis of .so libraries to discover exported JNI functions, demangle signatures, and generate Frida native interceptors |
 | `scripts/apk_mod_repack.py` | End-to-end APK modification and repackaging pipeline: unpack, inject debuggable/cleartext flags, swap DEX files, 4-byte zipalign, and V1/V2/V3 sign into ready-to-use Android APKs |
+| `scripts/whatsapp_mod_toolkit.py` | WhatsApp & Messenger modding, bot automation config injection, architecture audit, and ADB/scrcpy deployment toolkit |
+| `scripts/universal_apk_modder.py` | Universal APK reconnaissance (frameworks, packers, ads), MITM patching, 4-byte zipalign, V1/V2/V3 signing, and ADB/scrcpy deployment suite |
+| `scripts/apk_patcher_studio.py` | Universal APK patcher workstation: feature gate scanning, package cloning, automated MITM injection, 4-byte zipalign, and V1/V2/V3 signing pipeline |
 
-_63 row(s) below the header._
+_66 row(s) below the header._

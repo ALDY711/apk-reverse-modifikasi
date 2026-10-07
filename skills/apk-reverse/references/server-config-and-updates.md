@@ -142,9 +142,9 @@ Two channels can undo client-side work without a version bump:
   because remote resources rarely replace compiled logic.
 
 Also check whether the config is **cached to disk** (`SharedPreferences`, a JSON
-snapshot, a DataStore file). A cached copy means the app can exhibit the old
+snapshot, a DataStore file, or an opaque blob decoded with `scripts/blob_decode.py`). A cached copy means the app can exhibit the old
 behaviour offline for one launch after your change, which looks like a failed
-patch. Clear the cache as part of the experiment, and say so when reporting.
+patch. Clear the cache or decode it (`references/runtime-data.md`) as part of the experiment, and say so when reporting.
 
 ## 7. Reporting template
 

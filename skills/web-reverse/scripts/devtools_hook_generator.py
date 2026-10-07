@@ -263,6 +263,23 @@ SNIPPET_CRYPTO = r"""
       return ciphertext;
     };
 
+    const origDecrypt = window.crypto.subtle.decrypt;
+    window.crypto.subtle.decrypt = async function(algorithm, key, data) {
+      console.group('%c[WebCrypto] subtle.decrypt()%c', 'color: #00e676; font-weight: bold;', 'color: auto;');
+      console.log('Algorithm:', algorithm);
+      console.log('Key Object:', key);
+      console.log('Ciphertext IN (Hex):', ab2hex(data));
+      console.log('Stack:\n', new Error().stack);
+      console.groupEnd();
+
+      const plaintext = await origDecrypt.call(this, algorithm, key, data);
+      console.groupCollapsed('%c[WebCrypto] Plaintext Decrypted Result%c', 'color: #00e676; font-weight: bold;', 'color: auto;');
+      console.log('Plaintext (String):', ab2str(plaintext));
+      console.log('Plaintext (Hex):', ab2hex(plaintext));
+      console.groupEnd();
+      return plaintext;
+    };
+
     const origDigest = window.crypto.subtle.digest;
     window.crypto.subtle.digest = async function(algorithm, data) {
       const result = await origDigest.call(this, algorithm, data);
@@ -292,6 +309,26 @@ SNIPPET_CRYPTO = r"""
         console.log('Stack:\n', new Error().stack);
         console.groupEnd();
         return origAesEncrypt.apply(this, arguments);
+      };
+    }
+
+    if (window.CryptoJS.AES && window.CryptoJS.AES.decrypt) {
+      const origAesDecrypt = window.CryptoJS.AES.decrypt;
+      window.CryptoJS.AES.decrypt = function(ciphertext, key, cfg) {
+        console.group('%c[CryptoJS.AES.decrypt]%c', 'color: #e040fb; font-weight: bold;', 'color: auto;');
+        console.log('Ciphertext:', typeof ciphertext === 'object' ? ciphertext.toString() : ciphertext);
+        console.log('Key:', typeof key === 'object' ? key.toString() : key);
+        console.log('Config (IV/Mode):', cfg);
+        console.log('Stack:\n', new Error().stack);
+        console.groupEnd();
+
+        const res = origAesDecrypt.apply(this, arguments);
+        try {
+          console.log('%c[CryptoJS.AES.decrypt Result]%c', 'color: #00e676; font-weight: bold;', 'color: auto;', res.toString(window.CryptoJS.enc.Utf8));
+        } catch(e) {
+          console.log('%c[CryptoJS.AES.decrypt Result (Hex)]%c', 'color: #00e676; font-weight: bold;', 'color: auto;', res.toString());
+        }
+        return res;
       };
     }
 

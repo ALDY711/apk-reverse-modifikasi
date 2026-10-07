@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <a href="#-mulai-cepat">Mulai Cepat</a> · <a href="#-fitur-lengkap">Fitur</a> · <a href="#-8-agent-skills">Skills (8)</a> · <a href="#-88-script-otomasi">Script (88+)</a> · <a href="#-66-dokumen-referensi-teknis">Referensi (66+)</a> · <a href="#-workflow-4-gate">Workflow</a> · <a href="#-perintah-cli-lengkap">CLI</a> · <a href="#-prasyarat">Prasyarat</a> · <a href="#%EF%B8%8F-disclaimer">Disclaimer</a>
+  <a href="#-mulai-cepat">Mulai Cepat</a> · <a href="#-fitur-lengkap">Fitur</a> · <a href="#-8-agent-skills">Skills (8)</a> · <a href="#-95-script-otomasi">Script (95+)</a> · <a href="#-80-dokumen-referensi-teknis">Referensi (80+)</a> · <a href="#-workflow-4-gate">Workflow</a> · <a href="#-perintah-cli-lengkap">CLI</a> · <a href="#-prasyarat">Prasyarat</a> · <a href="#%EF%B8%8F-disclaimer">Disclaimer</a>
 </p>
 
 ---
@@ -30,7 +30,7 @@
 
 Sebuah ekosistem **8 Agent Skills** terpadu untuk reverse engineering aplikasi Android & Web, debloating, pemusnahan iklan, patching DEX bedah, repacking, bypass bot mitigasi Cloudflare tingkat lanjut, serta audit postur pertahanan keamanan web tingkat enterprise.
 
-Ini adalah **kumpulan skills**, bukan sekadar tutorial — dirancang untuk dimuat secara modular oleh agen AI (**Google Antigravity IDE, Claude Code, Cursor, Codex**, atau harness AI lainnya) maupun dieksekusi langsung via CLI / `npx`. Terstruktur dengan prinsip **progressive disclosure**: manual `SKILL.md` berorientasi keputusan, 66+ referensi teknis yang dimuat on-demand, dan 88+ skrip terparameterisasi siap pakai.
+Ini adalah **kumpulan skills**, bukan sekadar tutorial — dirancang untuk dimuat secara modular oleh agen AI (**Google Antigravity IDE, Claude Code, Cursor, Codex**, atau harness AI lainnya) maupun dieksekusi langsung via CLI / `npx`. Terstruktur dengan prinsip **progressive disclosure**: manual `SKILL.md` berorientasi keputusan, 80+ referensi teknis yang dimuat on-demand, dan 95+ skrip terparameterisasi siap pakai.
 
 ---
 
@@ -411,7 +411,7 @@ skills/web-security-audit/
 
 ---
 
-## 🛠️ 88+ Script Otomasi
+## 🛠️ 95+ Script Otomasi
 
 Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/scripts/` dan dapat dijalankan langsung via Python/Node atau melalui runner terintegrasi.
 
@@ -448,7 +448,7 @@ Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/
 | `device_shell.py` | 13 KB | ADB shell helper yang aman |
 | `jni_export_resolve.py` | 6.8 KB | Resolve JNI export symbols |
 
-### 🔨 Patching
+### 🔨 Patching & Modifikasi Universal
 
 | Script | Ukuran | Fungsi |
 |--------|--------|--------|
@@ -459,6 +459,9 @@ Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/
 | `so_constpatch.py` | **54 KB** | Same-length in-place rewrite konstanta string di .so (ARM/ARM64) |
 | `smtool.py` | 3.7 KB | baksmali/smali wrapper dengan configurable classpath |
 | `dexpatch/` | dir | dexlib2 method-level rewriter (untuk perubahan yang butuh instruksi baru) |
+| `universal_apk_modder.py` | 14 KB | Injeksi watermark branding, custom update banner, patch package name, & anti-tamper |
+| `apk_patcher_studio.py` | 10 KB | Interactive surgical patching studio: replace assets, patch DEX strings, inject NSC, neuter analytics |
+| `whatsapp_mod_toolkit.py` | 13 KB | Toolkit modifikasi mendalam WhatsApp: Delta/GB themes, anti-revoke message, freeze last seen, privacy bypass |
 
 ### 📦 Repack & Sign
 
@@ -503,6 +506,9 @@ Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/
 | `har_analyzer.py` | 10 KB | Analisis file HTTP Archive (HAR) untuk ekstrak alur API rahasia |
 | `ws_inspector.py` | 8.5 KB | Inspeksi & decode traffic WebSocket interaktif |
 | `web_modifier.py` | 14 KB | Generate Tampermonkey userscript & Map-Local HTTP interceptor proxy |
+| `curl_to_replay.py` | 7.5 KB | Konversi cURL command menjadi Python replay script (curl_cffi/requests/httpx) |
+| `telemetry_inspector.py` | 8.8 KB | Deteksi sensor fingerprinting (Canvas, WebGL, Audio) & auto-generate hooks |
+| `auth_flow_tracer.py` | 11 KB | Scanner enkripsi client-side (RSA JSEncrypt, CryptoJS AES/SHA), audit JWT token, & generator replay TLS |
 
 ### ☁️ Cloudflare & Anti-Bot Bypass (`skills/cf-bypass/scripts/`)
 
@@ -528,6 +534,11 @@ Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/
 | `csrf_audit.py` | 14 KB | Audit form tanpa token @csrf, aksi GET berisiko, & SameSite cookies |
 | `secret_scanner.py` | 13 KB | Pindai kebocoran kunci API & string Shannon Entropy $H(X) \ge 4.2$ |
 | `static_code_audit.py` | 11 KB | Analisis statis codebase (.env, APP_DEBUG, raw output, fungsi eval) |
+| `ssrf_validator.py` | 10 KB | Validasi SSRF, deteksi obfuskasi IP & cloud metadata (169.254.169.254) |
+| `subdomain_takeover_audit.py` | 8.2 KB | Audit rekaman Dangling CNAME & deteksi potensi subdomain takeover |
+| `sql_auth_auditor.py` | 10 KB | Audit SQLi pada form Login/Register, evaluasi hashing password (Argon2id/Bcrypt vs MD5), & prepared statements |
+| `idor_bola_auditor.py` | 8.5 KB | Audit Insecure Direct Object References (IDOR/BOLA) pada backend controller, validasi tenant scoping |
+| `rate_limit_audit.py` | 9.2 KB | Audit endpoint sensitif terhadap ketiadaan Rate Limiting/Throttling, generator sliding-window Redis & Nginx |
 
 ### 🎯 Dart/Flutter
 
@@ -564,7 +575,7 @@ Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/
 | `apk_debloater.py` | 9.3 KB | Debloater terintegrasi |
 | `apk_mitm_patch.py` | 11 KB | MITM patcher terintegrasi |
 
-## 📚 66+ Dokumen Referensi Teknis
+## 📚 80+ Dokumen Referensi Teknis
 
 Semua referensi berada di dalam direktori `skills/<skill-name>/references/` dan dimuat **on-demand** (hanya saat dibutuhkan).
 
@@ -579,7 +590,7 @@ Semua referensi berada di dalam direktori `skills/<skill-name>/references/` dan 
 | `evidence-summary.md` | 14 KB | Ringkasan capability + evidence yang bisa dibuka di installed copy |
 | `verification.md` | 7.9 KB | Claim ladder; definisi "done" |
 
-### 🔧 Patching & Build
+### 🔧 Patching, Modifikasi & Build
 
 | Dokumen | Ukuran | Topik |
 |---------|--------|-------|
@@ -588,6 +599,14 @@ Semua referensi berada di dalam direktori `skills/<skill-name>/references/` dan 
 | `patch-audit.md` | 8.3 KB | Buktikan patch *landed* dan *legal* |
 | `repack-and-sign.md` | 14 KB | Aturan repack, signing, post-install hazards |
 | `split-apk.md` | 21 KB | App Bundle / split APK: pull, sign, merge |
+| `universal-apk-modding-and-patching-guide.md` | 14 KB | Panduan komprehensif modifikasi APK universal, inject dialog, watermark, & packaging |
+| `whatsapp-mod-architecture-and-bot-integration.md` | 15 KB | Arsitektur modifikasi WhatsApp (GB/Delta/Plus), privasi, anti-hapus, & integrasi bot |
+| `license-bypass-and-feature-unlocking.md` | 13 KB | Rekayasa balik lisensi premium, Play Billing stubbing, & subscription gate bypass |
+| `cryptographic-analysis-and-decryption.md` | 12 KB | Ekstraksi kunci enkripsi AES/RSA/ChaCha20, dynamic key derivation, & offline decryptor |
+| `app-cloning-and-repackaging.md` | 11 KB | Arsitektur kloning aplikasi: package name renaming, Provider authority remapping |
+| `deep-internals-and-smali-surgery.md` | 14 KB | Bedah Smali tingkat lanjut: register manipulation, bytecode injection, dead-code pruning |
+| `troubleshooting-repack-install-failures.md` | 12 KB | Diagnosis kegagalan instalasi APK: INSTALL_PARSE_FAILED, signatures, alignment mismatch |
+| `cryptographic-interception-and-key-extraction.md` | 11 KB | Intersepsi kriptografi dinamis via Frida: hooking KeyStore, Cipher.init, & SecretKeySpec |
 
 ### 🛡️ Perlindungan & Hardening
 
@@ -670,6 +689,9 @@ Semua referensi berada di dalam direktori `skills/<skill-name>/references/` dan 
 | `webpack-and-vite-bundle-internals.md` | 13 KB | Anatomi chunk loader Webpack 5, Rollup, Vite dynamic imports |
 | `api-signature-and-request-signing-playbook.md` | 12 KB | Reverse engineering request signing (HMAC, SHA256, timestamps) |
 | `wasm-reverse-engineering-and-memory-hooking.md` | 15 KB | Disassembly WebAssembly (WAT), linear memory buffer, imports hook |
+| `browser-fingerprinting-and-telemetry-reversal.md` | 10 KB | Analisis sensor Canvas, WebGL, AudioContext, JA3/JA4, & mitigasi |
+| `client-storage-serviceworker-and-offline-sync.md` | 9.5 KB | Reverse engineering IndexedDB, LevelDB, Service Worker, & WebCrypto |
+| `auth-flow-and-client-encryption-reversal.md` | 11 KB | Rekayasa balik alur login, enkripsi kata sandi client-side (JSEncrypt RSA/CryptoJS), & peniruan TLS JA3/JA4 |
 
 ### 🛡️ Web Security Audit & Hardening (`skills/web-security-audit/references/`)
 
@@ -683,6 +705,11 @@ Semua referensi berada di dalam direktori `skills/<skill-name>/references/` dan 
 | `secure-file-upload-architecture.md` | 13 KB | Arsitektur upload aman, anti-RCE, polyglot stripping, isolasi server |
 | `content-security-policy-deep-dive.md` | 8.8 KB | CSP Level 3, cryptographic nonce, mode Report-Only & rollout |
 | `database-and-orm-hardening.md` | 8.3 KB | SQLi defense, PDO parameter binding, & mitigasi Mass Assignment |
+| `ssrf-and-cloud-metadata-defense.md` | 9.8 KB | Mitigasi SSRF, proteksi cloud metadata AWS/GCP/Azure, & DNS Rebinding |
+| `subdomain-takeover-and-dns-security.md` | 8.5 KB | Audit Dangling CNAME, pencegahan Subdomain Takeover, & standar DNS |
+| `sql-injection-and-auth-hardening-bible.md` | 11 KB | Panduan teknis pencegahan SQL Injection login/register, Second-Order SQLi, & standarisasi password hashing |
+| `idor-and-access-control-hardening-guide.md` | 10 KB | Panduan komprehensif pengerasan kendali akses, pencegahan IDOR & BOLA pada REST API |
+| `rate-limiting-and-anti-automation-bible.md` | 12 KB | Pertahanan anti-automasi, mitigasi credential stuffing, SMS toll fraud, & sliding window rate limiting |
 
 ---
 
@@ -820,6 +847,13 @@ python apk_cli.py debloat --target ./unpacked --neuter              # Neuter kom
 
 ```bash
 python apk_cli.py jni --so libnative.so --generate-hooks --out hook.js  # Hook generator
+```
+
+### Dekripsi & Decoding
+
+```bash
+python apk_cli.py decode blob --file config.bin --out clean.json         # Decode opaque config blob
+python apk_cli.py decode proto --hex "08 96 01 12 07 74 65 73 74 69 6e 67" # Decode raw protobuf
 ```
 
 ### Web Reverse Engineering
@@ -1011,8 +1045,8 @@ Regression matrix untuk target nyata tersedia di `tests/benchmark.md`.
 
 | Metrik | Jumlah |
 |--------|--------|
-| Total script | **88+** |
-| Dokumen referensi | **66+** |
+| Total script | **95+** |
+| Dokumen referensi | **80+** |
 | Agent skills | **8** |
 | Cakupan Keamanan | **Android APK, Cloudflare WAF, Web Reverse, Web Security Audit** |
 | Unit tests | **7** |

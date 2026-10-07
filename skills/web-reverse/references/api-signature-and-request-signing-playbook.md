@@ -143,3 +143,24 @@ def search_products(query: str):
     response = requests.get(API_ENDPOINT, params=params, headers=headers)
     return response.json()
 ```
+
+---
+
+## 6. Response Payload Decryption & Runtime Crypto Sniffing
+
+Many protected APIs return encrypted response bodies (e.g. base64-encoded AES-CBC or AES-GCM ciphertexts) that are decrypted by the frontend client immediately prior to rendering.
+
+### Decryption Triage Workflow:
+1. **Verify Client-Side Decryption:** If DevTools Network tab shows raw ciphertext in response bodies (e.g. `{"payload": "u7G3...=="}`), decryption happens client-side in JavaScript or WASM.
+2. **Inject Crypto Interceptor:**
+   Generate the crypto sniffer via `scripts/devtools_hook_generator.py`:
+   ```bash
+   python skills/web-reverse/scripts/devtools_hook_generator.py --type snippet --mode crypto
+   ```
+3. **Capture Plaintext & Keys:**
+   Paste the snippet into DevTools Console before triggering the request. The hook intercepts:
+   * `CryptoJS.AES.decrypt(ciphertext, key, {iv, mode})` — logs the plaintext JSON, key, and IV.
+   * `window.crypto.subtle.decrypt(algorithm, key, data)` — logs the unencrypted ArrayBuffer and key object.
+4. **Offline Decryption in Python:**
+   Once the key, IV, and mode are extracted, decrypt responses directly in your automated scraper using `pycryptodome` or `cryptography`.
+

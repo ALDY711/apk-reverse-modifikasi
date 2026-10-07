@@ -186,3 +186,117 @@ class TestWebModifier:
         )
         assert "window.auth.isVip" in script
         assert "return true" in script
+
+
+# --------------------------------------------------------------------------- #
+# auth_flow_tracer & sql_auth_auditor tests
+# --------------------------------------------------------------------------- #
+def _load_direct(rel_path: str, name: str):
+    import importlib.util
+    root = Path(__file__).resolve().parents[2]
+    p = root / rel_path
+    spec = importlib.util.spec_from_file_location(name, str(p))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+auth_flow_tracer = _load_direct("skills/web-reverse/scripts/auth_flow_tracer.py", "auth_flow_tracer")
+sql_auth_auditor = _load_direct("skills/web-security-audit/scripts/sql_auth_auditor.py", "sql_auth_auditor")
+idor_bola_auditor = _load_direct("skills/web-security-audit/scripts/idor_bola_auditor.py", "idor_bola_auditor")
+rate_limit_audit = _load_direct("skills/web-security-audit/scripts/rate_limit_audit.py", "rate_limit_audit")
+
+
+class TestAuthFlowTracer:
+    def test_scan_javascript_auth_detects_crypto_and_headers(self, tmp_path):
+        sample = """
+        const crypt = new JSEncrypt();
+        crypt.setPublicKey('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC...');
+        const p = crypt.encrypt('secret_pass');
+        fetch('/api/login', {
+            headers: { 'X-Signature': CryptoJS.HmacSHA256(p, 'k').toString() }
+        });
+        """
+        f = tmp_path / "app.js"
+        f.write_text(sample, encoding="utf-8")
+        res = auth_flow_tracer.scan_javascript_auth(str(f))
+
+        assert "RSA Encryption (JSEncrypt)" in res["detected_crypto"]
+        assert any("X-Signature" in h for h in res["detected_headers"])
+
+    def test_audit_jwt_token_flags_none_algorithm(self):
+        # Header: {"alg":"none"}, Payload: {"user":"admin"}
+        tok = "eyJhbGciOiJub25lIn0.eyJ1c2VyIjoiYWRtaW4ifQ."
+        res = auth_flow_tracer.audit_jwt_token(tok)
+        assert any("algoritma 'none'" in f for f in res["findings"])
+
+    def test_generate_auth_replay_script_contains_curl_cffi(self):
+        code = auth_flow_tracer.generate_auth_replay_script("https://example.com/api/login")
+        assert "curl_cffi" in code
+        assert "https://example.com/api/login" in code
+
+
+class TestSqlAuthAuditor:
+    def test_audit_file_content_detects_sqli_concatenation(self):
+        code = '$query = "SELECT * FROM users WHERE username = \'" . $user . "\'"; $db->query($query);'
+        res = sql_auth_auditor.audit_file_content(Path("LoginController.php"), code)
+        assert len(res["sqli"]) > 0
+        assert any("Concatenation" in item["rule"] for item in res["sqli"])
+
+    def test_audit_file_content_detects_weak_hash(self):
+        code = '$hashed = md5($password);'
+        res = sql_auth_auditor.audit_file_content(Path("RegisterController.php"), code)
+        assert len(res["hashing"]) > 0
+        assert any(h["type"] == "WEAK" for h in res["hashing"])
+
+    def test_audit_file_content_identifies_secure_hash(self):
+        code = '$hashed = password_hash($password, PASSWORD_ARGON2ID);'
+        res = sql_auth_auditor.audit_file_content(Path("RegisterController.php"), code)
+        assert any(h["type"] == "SECURE" for h in res["hashing"])
+
+
+class TestIdorBolaAuditor:
+    def test_audit_idor_file_detects_unscoped_find(self):
+        code = """
+        class OrderController {
+            public function show($id) {
+                $order = Order::findOrFail($id);
+                return response()->json($order);
+            }
+        }
+        """
+        findings = idor_bola_auditor.audit_idor_file(Path("OrderController.php"), code)
+        assert len(findings) > 0
+        assert any("BOLA" in item["rule"] for item in findings)
+
+    def test_audit_idor_file_detects_express_find_by_id(self):
+        code = """
+        app.get('/api/orders/:id', async (req, res) => {
+            const order = await Order.findById(req.params.id);
+            res.json(order);
+        });
+        """
+        findings = idor_bola_auditor.audit_idor_file(Path("order.js"), code)
+        assert len(findings) > 0
+        assert any("findById" in item["rule"] for item in findings)
+
+
+class TestRateLimitAudit:
+    def test_audit_route_content_detects_unprotected_login(self):
+        code = """
+        Route::post('/api/login', [AuthController::class, 'login']);
+        Route::post('/api/register', [AuthController::class, 'register']);
+        """
+        findings = rate_limit_audit.audit_route_content(Path("api.php"), code)
+        assert len(findings) == 2
+        assert any(f["endpoint_type"] == "login" for f in findings)
+        assert any(f["endpoint_type"] == "register" for f in findings)
+
+    def test_audit_route_content_recognizes_throttle_middleware(self):
+        code = """
+        Route::post('/api/login', [AuthController::class, 'login'])->middleware('throttle:login');
+        """
+        findings = rate_limit_audit.audit_route_content(Path("api.php"), code)
+        assert len(findings) == 0
+
+

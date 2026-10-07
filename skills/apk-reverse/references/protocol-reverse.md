@@ -4,6 +4,8 @@
 schema, the transport is gRPC, the connection is QUIC rather than TCP, or the client refuses to trust
 your proxy because it validates the certificate inside a native library.
 
+If the payload appears encrypted rather than serialized (AES/RSA/HMAC ciphers or custom crypto), read `references/cryptographic-analysis-and-decryption.md` for key extraction and runtime interception.
+
 Everything in this file assumes you have already decided the traffic matters and that a proxy is
 allowed to see it. If a *feature-scoped* TLS failure has appeared while the rest of the app works,
 that is a different problem with its own file: read `tls-and-cert.md` first — it owns the trust-chain

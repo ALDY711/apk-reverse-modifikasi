@@ -6,6 +6,7 @@
 |---|---|
 | `references/ssl-pinning-matrix.md` | Matriks teknik bypass SSL pinning across OkHttp, TrustManager, Conscrypt, Flutter |
 | `references/root-detection-matrix.md` | Daftar vektor deteksi root dan strategi neutralisasi |
+| `references/cryptographic-interception-and-key-extraction.md` | Panduan intersepsi runtime kriptografi (AES, RSA, HMAC, Keystore) dan ekstraksi kunci/plaintext |
 | `references/frida-performance-and-stability.md` | Panduan stabilitas, performa, dan troubleshooting runtime Frida |
 
 ## Script index

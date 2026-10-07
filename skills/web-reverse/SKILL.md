@@ -14,7 +14,10 @@ metadata:
     - "scripts/ws_inspector.py"
     - "scripts/web_modifier.py"
     - "scripts/har_analyzer.py"
-  last_reconstruction_pass: "2026-10-05"
+    - "scripts/curl_to_replay.py"
+    - "scripts/telemetry_inspector.py"
+    - "scripts/auth_flow_tracer.py"
+  last_reconstruction_pass: "2026-10-07"
 ---
 
 # Web Application Reverse Engineering & Analysis — Panduan Komprehensif
@@ -64,8 +67,10 @@ Aplikasi web modern tidak lagi berupa file HTML statis sederhana. Mereka adalah 
     - Chrome/Edge DevTools Local Overrides
     - Map-Local / Map-Remote via Proxy (mitmproxy, Charles, Proxyman)
     - Userscript Injection (Tampermonkey/Violentmonkey) dengan Proxy Traps
-11. [Katalog Tools & Skrip Helper](#katalog-tools--skrip-helper)
-12. [Troubleshooting & Symptom Index](#troubleshooting--symptom-index)
+11. [Browser Fingerprinting & Telemetry Reversal (Playbook)](references/browser-fingerprinting-and-telemetry-reversal.md)
+12. [Client Storage, Service Workers & Offline Sync (Playbook)](references/client-storage-serviceworker-and-offline-sync.md)
+13. [Katalog Tools & Skrip Helper](#katalog-tools--skrip-helper)
+14. [Troubleshooting & Symptom Index](#troubleshooting--symptom-index)
 
 ---
 
@@ -605,20 +610,74 @@ python scripts/web_modifier.py serve --port 8080 --map-local "/static/js/app.js=
 
 ---
 
+---
+
+## BROWSER FINGERPRINTING & TELEMETRY REVERSAL
+
+Sistem proteksi web modern (seperti Cloudflare Turnstile, DataDome, Kasada, Akamai Bot Manager, dan PerimeterX) mengumpulkan sidik jari peramban (*fingerprint*) yang mencakup:
+- **Grafis & Hardware:** Canvas 2D rasterization, WebGL unmasked vendor/renderer (`ANGLE`, GPU model), AudioContext oscillator frequency sampling.
+- **Atribut Lingkungan:** `navigator.webdriver`, `navigator.languages`, `navigator.hardwareConcurrency`, memory capacity, dan kebocoran automasi.
+- **Lapisan Jaringan:** TLS JA3/JA4 fingerprints dan urutan HTTP/2 SETTINGS frames.
+- **Biometrik & Sensor:** Kurva pergerakan mouse, dinamika ketikan keyboard, touch pressure/radius, dan event `devicemotion`.
+
+> **Panduan Lengkap:** Pelajari anatomi pengumpulan telemetri, ekstraksi collector script, dan resep spoofing di [`references/browser-fingerprinting-and-telemetry-reversal.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/references/browser-fingerprinting-and-telemetry-reversal.md).
+> Gunakan `scripts/telemetry_inspector.py` untuk mendeteksi vektor fingerprinting pada bundle JS atau membuat runtime hook monitor/spoof secara instan.
+
+---
+
+## CLIENT STORAGE, SERVICE WORKERS & OFFLINE SYNC
+
+Aplikasi web modern (terutama PWA dan aplikasi pesan berbasis browser) menyimpan status terenkripsi dan aset offline menggunakan hierarki penyimpanan tingkat lanjut:
+- **IndexedDB & LevelDB:** Struktur penyimpanan LevelDB Chromium di disk, format V8 Structured Clone, dan ekstraksi object store langsung via DevTools console.
+- **Service Workers (`sw.js`):** Intersepsi lalu lintas jaringan pada background worker, strategi caching (*Cache First* vs *Network First*), dan mitigasi request yang tidak muncul di Network tab.
+- **WebCrypto di Penyimpanan Lokal:** Pola penyimpanan `CryptoKey` non-extractable, enkripsi AES-GCM database lokal, dan teknik hooking `crypto.subtle.decrypt`/`encrypt` untuk menangkap plaintext saat runtime.
+- **Hydration State:** Akses dan modifikasi state reaktif secara live pada store Redux (`getState()`), Pinia (`$pinia.state`), atau Zustand.
+
+> **Panduan Lengkap:** Pelajari ekstraksi database lokal, manipulasi cache, dan hooking WebCrypto di [`references/client-storage-serviceworker-and-offline-sync.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/references/client-storage-serviceworker-and-offline-sync.md).
+
+---
+
+## REPLAY OTOMATIS REQUEST API DENGAN IMPERSONASI TLS
+
+Setelah parameter API, signature, dan header berhasil dipetakan, konversikan perintah cURL dari browser secara langsung menjadi skrip Python yang mempertahankan profil TLS browser (*JA3/JA4 bypass*):
+```bash
+# Konversi cURL command menjadi skrip Python berbasis curl_cffi dengan profil Chrome 120
+python scripts/curl_to_replay.py --curl "curl 'https://api.target.com/v1/auth' -H 'X-Sign: 9a8b...' -H 'Cookie: sid=xyz'" --output replay_api.py --library curl_cffi --impersonate chrome120
+
+# Konversi cURL dari file dan gunakan requests standar
+python scripts/curl_to_replay.py --file raw_request.curl --output replay_api.py --library requests
+```
+
+---
+
+## REVERSE ENGINEERING ALUR LOGIN, REGISTER & ENKRIPSI CLIENT-SIDE
+
+Aplikasi web modern sering mengenkripsi kata sandi dan payload autentikasi di peramban menggunakan kombinasi kunci publik RSA (JSEncrypt), AES CBC/GCM (CryptoJS / WebCrypto), atau hash dinamis sebelum dikirim ke API backend:
+- **Deteksi Kriptografi Client:** Pindai file JavaScript target untuk mengidentifikasi pustaka enkripsi dan parameter form login/register.
+- **Audit Token JWT:** Dekonstruksi token JWT, verifikasi integritas algoritma (deteksi kerentanan `none` dan HMAC confusion), masa berlaku (`exp`), serta payload sensitif.
+- **Generator Replay Otomatis:** Buat skrip replay Python dengan peniruan peramban TLS JA3/JA4 menggunakan `curl_cffi`.
+
+> **Panduan Lengkap:** Pelajari anatomi enkripsi RSA/AES sisi klien, pelacakan call stack DevTools, dan rekonstruksi payload di [`references/auth-flow-and-client-encryption-reversal.md`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/references/auth-flow-and-client-encryption-reversal.md).
+
+---
+
 ## KATALOG TOOLS & SKRIP HELPER
 
 Semua skrip pembantu berada di direktori `scripts/` dan siap dieksekusi:
 
 | Skrip | Bahasa | Deskripsi & Kegunaan Utama |
 |---|---|---|
-| [`sourcemap_extractor.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/sourcemap_extractor.py) | Python | Ekstraksi Source Map v3, rekonsiliasi struktur project, parsing inline base64 map |
-| [`webpack_unpacker.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/webpack_unpacker.py) | Python | Bedah chunk Webpack 4/5, ekstrak modul per file, deteksi modul sensitif auth/crypto/api |
-| [`js_deobfuscator.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/js_deobfuscator.py) | Python | Format minified code, unpack Dean Edwards eval, decode hex/unicode, matikan debugger loop |
-| [`web_api_tracer.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/web_api_tracer.py) | Python | Static scanner pelacak generator signature, interceptor Axios/Fetch, hashing MD5/SHA/AES |
-| [`devtools_hook_generator.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/devtools_hook_generator.py) | Python | Generator userscript & snippet anti-debug, crypto sniffer, fetch/XHR hook, storage observer |
-| [`ws_inspector.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/ws_inspector.py) | Python | WebSocket frame inspector, Protobuf & Socket.io decoder, scaffold replay client |
-| [`web_modifier.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/web_modifier.py) | Python | Map-Local proxy server & dynamic userscript generator |
-| [`har_analyzer.py`](file:///c:/apk-reverse/apk/.agents/skills/web-reverse/scripts/har_analyzer.py) | Python | HAR network log analyzer & cURL exporter |
+| [`sourcemap_extractor.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/sourcemap_extractor.py) | Python | Ekstraksi Source Map v3, rekonsiliasi struktur project, parsing inline base64 map |
+| [`webpack_unpacker.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/webpack_unpacker.py) | Python | Bedah chunk Webpack 4/5, ekstrak modul per file, deteksi modul sensitif auth/crypto/api |
+| [`js_deobfuscator.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/js_deobfuscator.py) | Python | Format minified code, unpack Dean Edwards eval, decode hex/unicode, matikan debugger loop |
+| [`web_api_tracer.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/web_api_tracer.py) | Python | Static scanner pelacak generator signature, interceptor Axios/Fetch, hashing MD5/SHA/AES |
+| [`devtools_hook_generator.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/devtools_hook_generator.py) | Python | Generator userscript & snippet anti-debug, crypto sniffer, fetch/XHR hook, storage observer |
+| [`ws_inspector.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/ws_inspector.py) | Python | WebSocket frame inspector, Protobuf & Socket.io decoder, scaffold replay client |
+| [`web_modifier.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/web_modifier.py) | Python | Map-Local proxy server & dynamic userscript generator |
+| [`har_analyzer.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/har_analyzer.py) | Python | HAR network log analyzer & cURL exporter |
+| [`curl_to_replay.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/curl_to_replay.py) | Python | Konversi cURL menjadi skrip Python otomatis (`curl_cffi` dengan JA3/JA4 impersonation / `requests` / `httpx`) |
+| [`telemetry_inspector.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/telemetry_inspector.py) | Python | Deteksi vektor browser fingerprinting (Canvas, WebGL, Audio) & auto-generator hook monitor/spoof |
+| [`auth_flow_tracer.py`](file:///c:/apk-reverse/apk/apk-reverse/skills/web-reverse/scripts/auth_flow_tracer.py) | Python | Pelacak alur Login/Register, deteksi enkripsi client-side (RSA/CryptoJS/WebCrypto), audit JWT, dan scaffold replay TLS. |
 
 ---
 

@@ -217,6 +217,7 @@ unread in this repository.
 | A captured body decodes to nothing readable, or you cannot tell whether a length-delimited field is a string, a nested message or a packed array | `protocol-reverse.md`. Protobuf on the wire (measured) — run `scripts/protobuf_decode_raw.py`; the candidate list and its `tie:` lines are the answer |
 | Method bodies are present but decode as **private opcodes**, and you need the mapping rather than an explanation of why VMP is hard | `vmp-differential-analysis.md`, then `advanced-unpacking.md` for the shape diagnosis |
 | A store build arrives as `base.apk` + `split_config.*.apk`, or a rebuilt build is refused **as a set** although every file verifies on its own | `split-apk.md` — one keystore across every member for `pm install-multiple`, and check that a merge is legal before trusting a merged single APK |
+| A captured payload, local store, config or communication is encrypted, or you need to recover cryptographic keys (AES/RSA/HMAC) | references/cryptographic-analysis-and-decryption.md — JCA interception, Keystore unwrap, native crypto constants, and blob decoding |
 
 ## Gates — clear these before you patch, in order
 
