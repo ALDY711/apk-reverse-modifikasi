@@ -19,9 +19,9 @@
 
 # apk-reverse & Security Suite: Android Reverse Engineering, Web Security Audit & Cloudflare Bypass Toolkit
 
-> 🛠️ **Dimodifikasi & Dikembangkan oleh ALDY** — Suite Lengkap: Reverse Engineering APK Android, Bypass Cloudflare & WAF, Audit Keamanan Web Standar OWASP Top 10, serta Web Reverse Engineering.
+> 🛠️ **Dimodifikasi & Dikembangkan oleh ALDY** — Suite Lengkap: Reverse Engineering APK Android, Mobile Cryptography & KeyStore Inspector, REST & GraphQL API Pentest, Bypass Cloudflare & WAF, Audit Keamanan Web Standar OWASP Top 10, serta Web Reverse Engineering.
 
-Sebuah ekosistem **8 Agent Skills** terpadu untuk reverse engineering aplikasi Android & Web, debloating, pemusnahan iklan, patching DEX bedah, repacking, bypass bot mitigasi Cloudflare tingkat lanjut, serta audit postur pertahanan keamanan web tingkat enterprise.
+Sebuah ekosistem **10 Agent Skills** terpadu untuk reverse engineering aplikasi Android & Web, inspeksi kriptografi mobile, pengujian keamanan API/GraphQL, debloating, pemusnahan iklan, patching DEX bedah, repacking, bypass bot mitigasi Cloudflare tingkat lanjut, serta audit postur pertahanan keamanan web tingkat enterprise.
 
 Ini adalah **skill**, bukan tutorial: dirancang untuk dimuat oleh agen AI (Claude Code, Codex,
 Google Antigravity IDE, atau harness mana pun yang mendukung format Agent Skills) saat bekerja.
@@ -129,10 +129,18 @@ apk-reverse/
 │   │   ├── SKILL.md            ← Prosedur manifest neutering & stubbing
 │   │   ├── scripts/            ← Manifest scanner & smali stub generator
 │   │   └── references/         ← Katalog signature iklan & teknik neutering
-│   └── apk-mitm-patcher/       ← Skill intersepsi HTTPS & Network Security Config
-│       ├── SKILL.md            ← Prosedur injeksi user CA & bypass cleartext
-│       ├── scripts/            ← NSC patcher & cert inspector
-│       └── references/         ← Spesifikasi XML NSC & troubleshooting proxy
+│   ├── apk-mitm-patcher/       ← Skill intersepsi HTTPS & Network Security Config
+│   │   ├── SKILL.md            ← Prosedur injeksi user CA & bypass cleartext
+│   │   ├── scripts/            ← NSC patcher & cert inspector
+│   │   └── references/         ← Spesifikasi XML NSC & troubleshooting proxy
+│   ├── mobile-crypto-inspector/← Skill inspeksi kriptografi & Android KeyStore
+│   │   ├── SKILL.md            ← Prosedur audit kriptografi, TEE & storage
+│   │   ├── scripts/            ← Smali scanner, KeyStore auditor, DB inspector, & Frida hook
+│   │   └── references/         ← Arsitektur TEE, cipher lemah, & SQLCipher
+│   └── api-security-graphql/   ← Skill pentest API REST & GraphQL
+│       ├── SKILL.md            ← Prosedur audit BOLA, DoS GraphQL, & JWT
+│       ├── scripts/            ← Schema auditor, query analyzer, BOLA scanner, JWT checker
+│       └── references/         ← OWASP API Top 10, GraphQL hardening, JWT guide
 │
 ├── tests/                  ← Unit & integration tests
 ├── docs/                   ← Verifikasi tool

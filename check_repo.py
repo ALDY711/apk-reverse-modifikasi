@@ -37,8 +37,8 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 SKILLS_DIR = os.path.join(ROOT, 'skills')
 README = os.path.join(ROOT, 'README.md')
 
-REF_RE = re.compile(r'`?(references/[A-Za-z0-9_\-]+\.md)')
-SCRIPT_RE = re.compile(r'`?(scripts/[A-Za-z0-9_\-]+\.(?:py|js))')
+REF_RE = re.compile(r'(?<![\w/])`?(references/[A-Za-z0-9_\-]+\.md)')
+SCRIPT_RE = re.compile(r'(?<![\w/])`?(scripts/[A-Za-z0-9_\-]+\.(?:py|js))')
 NAMED_PATH_RE = re.compile(
     r'skills/(?P<skill>[a-z0-9\-]+)/(?P<sub>references|scripts)/'
     r'(?P<file>[A-Za-z0-9_\-]+\.(?:md|py|js))')
@@ -307,12 +307,12 @@ def check_leaks():
     for line in (run.stdout or '').splitlines():
         stripped = line.strip()
         if re.search(r'\[(package|device|token|appkey|path)/(strong|certain)\]', stripped):
-            print('    %s' % stripped)
+            print('    %s' % stripped.encode('ascii', errors='replace').decode('ascii'))
             keep_detail = True
         elif stripped.startswith('[') and stripped.count(']') >= 2:
             keep_detail = False
         elif keep_detail and (stripped.startswith('match:') or stripped.startswith('context:')):
-            print('      %s' % stripped)
+            print('      %s' % stripped.encode('ascii', errors='replace').decode('ascii'))
     fail.append('leak scan: strong target identity on the tracked surface '
                 '(run: python skills/apk-reverse/scripts/scan_leaks.py)')
 

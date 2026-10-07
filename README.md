@@ -19,18 +19,18 @@
 </p>
 
 <p align="center">
-  <a href="#-mulai-cepat">Mulai Cepat</a> · <a href="#-fitur-lengkap">Fitur</a> · <a href="#-8-agent-skills">Skills (8)</a> · <a href="#-95-script-otomasi">Script (95+)</a> · <a href="#-80-dokumen-referensi-teknis">Referensi (80+)</a> · <a href="#-workflow-4-gate">Workflow</a> · <a href="#-perintah-cli-lengkap">CLI</a> · <a href="#-prasyarat">Prasyarat</a> · <a href="#%EF%B8%8F-disclaimer">Disclaimer</a>
+  <a href="#-mulai-cepat">Mulai Cepat</a> · <a href="#-fitur-lengkap">Fitur</a> · <a href="#-10-agent-skills">Skills (10)</a> · <a href="#-105-script-otomasi">Script (105+)</a> · <a href="#-88-dokumen-referensi-teknis">Referensi (88+)</a> · <a href="#-workflow-4-gate">Workflow</a> · <a href="#-perintah-cli-lengkap">CLI</a> · <a href="#-prasyarat">Prasyarat</a> · <a href="#%EF%B8%8F-disclaimer">Disclaimer</a>
 </p>
 
 ---
 
 # apk-reverse & Security Suite: Android Reverse Engineering, Web Security Audit & Cloudflare Bypass Toolkit
 
-> 🛠️ **Dimodifikasi & Dikembangkan oleh ALDY** — Framework All-in-One: Reverse Engineering Android APK (DEX & Native), Bypass Cloudflare WAF & Turnstile, Audit Keamanan Web Standar OWASP Top 10, serta Analisis Web Client-Side (SPA/Webpack/Vite).
+> 🛠️ **Dimodifikasi & Dikembangkan oleh ALDY** — Framework All-in-One: Reverse Engineering Android APK (DEX & Native), Mobile Cryptography & KeyStore Inspection, REST & GraphQL API Pentest, Bypass Cloudflare WAF & Turnstile, Audit Keamanan Web Standar OWASP Top 10, serta Analisis Web Client-Side (SPA/Webpack/Vite).
 
-Sebuah ekosistem **8 Agent Skills** terpadu untuk reverse engineering aplikasi Android & Web, debloating, pemusnahan iklan, patching DEX bedah, repacking, bypass bot mitigasi Cloudflare tingkat lanjut, serta audit postur pertahanan keamanan web tingkat enterprise.
+Sebuah ekosistem **10 Agent Skills** terpadu untuk reverse engineering aplikasi Android & Web, mobile cryptography inspection, API/GraphQL pentesting, debloating, pemusnahan iklan, patching DEX bedah, repacking, bypass bot mitigasi Cloudflare tingkat lanjut, serta audit postur pertahanan keamanan web tingkat enterprise.
 
-Ini adalah **kumpulan skills**, bukan sekadar tutorial — dirancang untuk dimuat secara modular oleh agen AI (**Google Antigravity IDE, Claude Code, Cursor, Codex**, atau harness AI lainnya) maupun dieksekusi langsung via CLI / `npx`. Terstruktur dengan prinsip **progressive disclosure**: manual `SKILL.md` berorientasi keputusan, 80+ referensi teknis yang dimuat on-demand, dan 95+ skrip terparameterisasi siap pakai.
+Ini adalah **kumpulan skills**, bukan sekadar tutorial — dirancang untuk dimuat secara modular oleh agen AI (**Google Antigravity IDE, Claude Code, Cursor, Codex**, atau harness AI lainnya) maupun dieksekusi langsung via CLI / `npx`. Terstruktur dengan prinsip **progressive disclosure**: manual `SKILL.md` berorientasi keputusan, 88+ referensi teknis yang dimuat on-demand, dan 105+ skrip terparameterisasi siap pakai.
 
 ---
 
@@ -232,9 +232,9 @@ Salin folder skills/ ke ~/.gemini/config/skills/
 
 ---
 
-## 📁 8 Agent Skills
+## 📁 10 Agent Skills
 
-Repository ini menyediakan **8 skill modular** di bawah `skills/`:
+Repository ini menyediakan **10 skill modular** di bawah `skills/`:
 
 ### 1. ⭐ `apk-reverse` — Skill Inti (Terbesar)
 
@@ -409,9 +409,60 @@ skills/web-security-audit/
 | `content-security-policy-deep-dive.md` | CSP Level 3, cryptographic nonce, mode Report-Only |
 | `database-and-orm-hardening.md` | SQLi defense, PDO parameter binding, & mitigasi Mass Assignment |
 
+### 9. 🔐 `mobile-crypto-inspector` — Mobile Cryptography & Keystore Inspector
+
+Audit, analisis, dan inspeksi implementasi kriptografi pada aplikasi mobile/Android. Meliputi inspeksi hardware-backed Android KeyStore (TEE/StrongBox), deteksi cipher usang (ECB, DES, MD5), hardcoded keys, static IVs, audit SQLite/SQLCipher terenkripsi, serta pembuatan hook Frida runtime kriptografi.
+
+```
+skills/mobile-crypto-inspector/
+├── SKILL.md              ← Manual master audit kriptografi mobile
+├── scripts/              ← 4 script pemindai smali, keystore, storage, & Frida hook
+└── references/           ← 4 dokumen arsitektur TEE, cipher, & SQLCipher
+```
+
+| Script | Fungsi |
+|--------|--------|
+| `crypto_smali_scanner.py` | Pindai kode smali/source untuk mendeteksi AES/ECB, static IV, dan hardcoded keys |
+| `keystore_inspector.py` | Audit implementasi Android KeyStore, StrongBox, MasterKey, dan EncryptedPrefs |
+| `encrypted_storage_audit.py` | Audit database SQLite (plaintext vs SQLCipher) dan kebocoran SharedPreferences |
+| `runtime_crypto_hook_gen.py` | Generator script Frida untuk memonitor Cipher, Mac, dan KeyStore di memori |
+
+| Referensi | Topik |
+|-----------|-------|
+| `android-keystore-and-hardware-backing.md` | Arsitektur isolasi hardware TEE, StrongBox, dan KeyGenParameterSpec |
+| `weak-ciphers-and-misconfigurations.md` | Taksonomi kelemahan ECB mode, IV reuse, dan derivasi kunci PBKDF2 |
+| `sqlcipher-and-encrypted-storage.md` | Pengamanan database SQLite SQLCipher, MasterKey, dan backup flags |
+| `frida-crypto-tracing-recipes.md` | Resep hook Frida untuk melacak operasi kriptografi Java dan Native C/C++ |
+
+### 10. 🎯 `api-security-graphql` — API Pentest & GraphQL Security Audit
+
+Audit dan pengujian keamanan API modern (RESTful, OpenAPI/Swagger, dan GraphQL). Meliputi pengujian celah BOLA (Broken Object Level Authorization / IDOR), GraphQL Introspection leakage, DoS kueri bersarang (Query Depth), audit manipulasi token JWT, serta pengujian Rate Limiting.
+
+```
+skills/api-security-graphql/
+├── SKILL.md              ← Manual master audit keamanan API REST & GraphQL
+├── scripts/              ← 5 script audit skema, query DoS, BOLA, JWT, & rate limiting
+└── references/           ← 4 dokumen OWASP API Top 10, GraphQL, & JWT hardening
+```
+
+| Script | Fungsi |
+|--------|--------|
+| `graphql_schema_auditor.py` | Audit file skema introspeksi GraphQL untuk deteksi field sensitif & mutasi berbahaya |
+| `graphql_query_analyzer.py` | Analisis kompleksitas kueri GraphQL: hitung depth, deteksi alias batching DoS |
+| `api_bola_auditor.py` | Pindai spesifikasi OpenAPI/Swagger untuk menemukan endpoint rentan BOLA / IDOR |
+| `jwt_security_checker.py` | Audit token JWT untuk mendeteksi celah algoritma 'none', expiry, dan secret leakage |
+| `rate_limit_probe.py` | Probe proteksi rate limiting (HTTP 429, header RateLimit) pada endpoint sensitif |
+
+| Referensi | Topik |
+|-----------|-------|
+| `owasp-api-top-10-guide.md` | Panduan lengkap OWASP API Security Top 10 edisi 2023 dan mitigasi defensif |
+| `graphql-security-hardening.md` | Pengerasan server Apollo/Yoga: mematikan introspeksi, depth limit, & query cost |
+| `jwt-security-and-common-pitfalls.md` | Arsitektur token JWT yang aman, mitigasi Key Confusion, dan refresh token |
+| `api-testing-cheatsheet.md` | Cheatsheet pengujian keamanan API REST dan GraphQL |
+
 ---
 
-## 🛠️ 95+ Script Otomasi
+## 🛠️ 105+ Script Otomasi
 
 Semua script didistribusikan ke dalam masing-masing folder `skills/<skill-name>/scripts/` dan dapat dijalankan langsung via Python/Node atau melalui runner terintegrasi.
 
